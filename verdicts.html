@@ -15,16 +15,21 @@
 <div class="demo-bar">Démo · les questions et les chiffres sont fictifs</div>
 <header class="site-header">
   <div class="wrap header-row">
-    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="136" height="30"></a>
-    <div class="header-right">
-      <span class="streak" id="streak" hidden></span>
-      <a class="btn btn--contour btn--petit" href="index.html#pro">Espace pro</a>
-    </div>
+    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="200" height="44"></a>
     <nav class="tabs" aria-label="Navigation principale">
       <a class="tab" href="index.html">Aujourd'hui</a>
+      <a class="tab" href="questions.html">Questions</a>
+      <a class="tab" href="tournois.html">Tournois</a>
       <a class="tab is-active" href="verdicts.html" aria-current="page">Verdicts</a>
       <a class="tab" href="classement.html">Classement</a>
     </nav>
+    <div class="header-right">
+      <span class="streak" id="streak" hidden></span>
+      <a class="btn btn--petit" id="auth-link" href="connexion.html">Connexion</a>
+    </div>
+  </div>
+  <div class="cats-bar">
+    <nav class="wrap cats" id="cats" aria-label="Catégories"><a class="cat t-politique" href="questions.html?theme=politique">Politique</a><a class="cat t-sport" href="questions.html?theme=sport">Sport</a><a class="cat t-culture" href="questions.html?theme=culture">Culture</a><a class="cat t-economie" href="questions.html?theme=economie">Économie</a><a class="cat t-sciences" href="questions.html?theme=sciences">Sciences</a></nav>
   </div>
 </header>
 <main>
@@ -53,14 +58,14 @@
   <div class="wrap pro-row">
     <div>
       <p class="kicker">Média ou marque ?</p>
-      <h2 class="h2">Un baromètre à votre nom.</h2>
+      <h2 class="h2">Un baromètre ou un tournoi à votre nom.</h2>
     </div>
     <a class="btn btn--blanc" id="pro-contact" href="#pro">Demander une démo</a>
   </div>
 </section>
 <footer class="site-footer">
   <div class="wrap footer-row">
-    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="109" height="24">
+    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="145" height="32">
     <p>Ni sondage, ni pari : aucune mise, des probabilités, des verdicts publiés.</p>
   </div>
 </footer>

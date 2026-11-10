@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connexion — NostraData</title>
+<meta name="description" content="Connecte-toi à NostraData pour garder ton score, entrer au classement et rejoindre les tournois.">
+<meta name="theme-color" content="#0B0B0B">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="demo-bar">Démo · les questions et les chiffres sont fictifs</div>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="200" height="44"></a>
+    <nav class="tabs" aria-label="Navigation principale">
+      <a class="tab" href="index.html">Aujourd'hui</a>
+      <a class="tab" href="questions.html">Questions</a>
+      <a class="tab" href="tournois.html">Tournois</a>
+      <a class="tab" href="verdicts.html">Verdicts</a>
+      <a class="tab" href="classement.html">Classement</a>
+    </nav>
+    <div class="header-right">
+      <span class="streak" id="streak" hidden></span>
+      <a class="btn btn--petit" id="auth-link" href="connexion.html">Connexion</a>
+    </div>
+  </div>
+  <div class="cats-bar">
+    <nav class="wrap cats" id="cats" aria-label="Catégories"><a class="cat t-politique" href="questions.html?theme=politique">Politique</a><a class="cat t-sport" href="questions.html?theme=sport">Sport</a><a class="cat t-culture" href="questions.html?theme=culture">Culture</a><a class="cat t-economie" href="questions.html?theme=economie">Économie</a><a class="cat t-sciences" href="questions.html?theme=sciences">Sciences</a></nav>
+  </div>
+</header>
+<main>
+<section class="section">
+  <div class="wrap auth">
+    <div class="auth-pitch">
+      <span class="face" data-face="92,sur"></span>
+      <h1 class="h2">Garde ton score.</h1>
+      <ul class="ticks">
+        <li>Tes pronostics te suivent d'un appareil à l'autre.</li>
+        <li>Tu entres au classement de la saison.</li>
+        <li>Tu rejoins les tournois et tu gagnes des titres.</li>
+      </ul>
+    </div>
+
+    <div class="auth-card" id="auth-panel">
+      <div class="filters" role="group" aria-label="Connexion ou création de compte">
+        <button type="button" class="filter" data-auth-tab="connexion" aria-pressed="true">Connexion</button>
+        <button type="button" class="filter" data-auth-tab="inscription" aria-pressed="false">Créer un compte</button>
+      </div>
+      <h2 class="h3" id="auth-title">Connexion</h2>
+      <form id="auth-form" class="fields">
+        <div class="field" id="field-pseudo" hidden>
+          <label for="pseudo">Pseudonyme</label>
+          <input id="pseudo" name="pseudo" type="text" autocomplete="nickname" maxlength="20" placeholder="Cassandre">
+          <p class="small muted">C'est le nom affiché au classement.</p>
+        </div>
+        <div class="field">
+          <label for="email">Adresse e-mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" required placeholder="toi@exemple.fr">
+        </div>
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required minlength="8">
+          <p class="small muted">8 caractères au minimum.</p>
+        </div>
+        <button class="btn btn--plein" type="submit" id="auth-submit">Me connecter</button>
+        <p class="small demo-note">Démo : rien n'est envoyé. Ton e-mail et ton mot de passe ne sont ni vérifiés ni enregistrés, seul ton pseudonyme reste dans ce navigateur.</p>
+      </form>
+    </div>
+
+    <div class="auth-card" id="auth-account" hidden>
+      <p class="kicker">Connecté</p>
+      <h2 class="h3" id="account-pseudo"></h2>
+      <p id="account-count"></p>
+      <a class="btn btn--plein" href="index.html">Jouer la question du jour</a>
+      <a class="btn btn--contour btn--plein" href="tournois.html">Voir les tournois</a>
+      <button class="link-btn" type="button" id="logout">Me déconnecter</button>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="145" height="32">
+    <p>Ni sondage, ni pari : aucune mise, des probabilités, des verdicts publiés.</p>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

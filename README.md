@@ -4,7 +4,7 @@ L'avenir, en probabilités. Chaque jour, une question : tu donnes ta probabilit�
 
 Ce dépôt contient la première version du site : une **démo statique**, sans serveur ni base de données.
 
-> **Tout est fictif dans cette démo** : questions, probabilités, verdicts, pseudonymes et scores. Un bandeau le rappelle en haut de chaque page.
+> **Tout est fictif dans cette démo** : questions, probabilités, verdicts, tournois, pseudonymes et scores. Le site le signale par une ligne discrète dans le pied de page (« Version de présentation · contenus d'exemple ») et par une note sur la page de connexion.
 
 ## Ce que fait le site
 

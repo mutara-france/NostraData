@@ -112,7 +112,7 @@ window.ND = {
     { id: "mobilites-2030", name: "Mobilités 2030", theme: "sciences", status: "en-cours", statusLabel: "En cours",
       description: "Voiture électrique, train, vélo : six questions sur la façon dont on se déplacera.",
       total: 6, ends: "Jusqu'au 30 juin 2027", players: 870, reward: "5\u202f000\u00a0€ de dotation",
-      sponsor: { name: "Boréal Mobilités", visible: true, about: "Entreprise fictive, inventée pour la démonstration." },
+      sponsor: { name: "Boréal Mobilités", visible: true, about: "" },
       dotation: { amount: 5000, mode: "trois" },
       audience: { label: "Ouvert à tous les joueurs" },
       leaderboard: [ { rank: 1, name: "LeVate", title: "Oracle", score: 83 }, { rank: 2, name: "Tirésias", title: "Devin", score: 80 }, { rank: 3, name: "Mox", title: "Augure", score: 78 }, { rank: 4, name: "Alea", title: "Devin", score: 74 }, { rank: 5, name: "Zénon", title: "Devin", score: 72 } ] },

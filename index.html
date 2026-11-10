@@ -15,16 +15,21 @@
 <div class="demo-bar">Démo · les questions et les chiffres sont fictifs</div>
 <header class="site-header">
   <div class="wrap header-row">
-    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="136" height="30"></a>
-    <div class="header-right">
-      <span class="streak" id="streak" hidden></span>
-      <a class="btn btn--contour btn--petit" href="index.html#pro">Espace pro</a>
-    </div>
+    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="200" height="44"></a>
     <nav class="tabs" aria-label="Navigation principale">
       <a class="tab is-active" href="index.html" aria-current="page">Aujourd'hui</a>
+      <a class="tab" href="questions.html">Questions</a>
+      <a class="tab" href="tournois.html">Tournois</a>
       <a class="tab" href="verdicts.html">Verdicts</a>
       <a class="tab" href="classement.html">Classement</a>
     </nav>
+    <div class="header-right">
+      <span class="streak" id="streak" hidden></span>
+      <a class="btn btn--petit" id="auth-link" href="connexion.html">Connexion</a>
+    </div>
+  </div>
+  <div class="cats-bar">
+    <nav class="wrap cats" id="cats" aria-label="Catégories"><a class="cat t-politique" href="questions.html?theme=politique">Politique</a><a class="cat t-sport" href="questions.html?theme=sport">Sport</a><a class="cat t-culture" href="questions.html?theme=culture">Culture</a><a class="cat t-economie" href="questions.html?theme=economie">Économie</a><a class="cat t-sciences" href="questions.html?theme=sciences">Sciences</a></nav>
   </div>
 </header>
 <main>
@@ -32,40 +37,11 @@
   <div class="wrap hero-row">
     <div class="hero-text">
       <p class="defi-banner" id="defi-banner" hidden></p>
-      <div class="hero-pills"><span class="pill">Question du jour</span><span class="pill pill--blanc" id="q-theme">Culture</span></div>
+      <div class="hero-pills" id="q-pills"></div>
       <h1 id="q-text">La question du jour arrive.</h1>
       <div class="hero-meta"><span class="strong" id="q-verdict"></span><span id="q-players"></span></div>
     </div>
-
-    <div class="play">
-      <form id="play-form" class="stack" style="gap: 18px">
-        <label class="play-label" for="gauge">Tu dis combien ?</label>
-        <div class="gauge"><span class="gauge-face face" id="gauge-face"></span><output class="num" id="gauge-num" for="gauge">50 %</output></div>
-        <input class="slider" id="gauge" type="range" min="0" max="100" step="1" value="50">
-        <p class="small muted">Glisse pour régler. L'anneau change de tête.</p>
-        <button class="btn btn--plein" type="submit">Valider et voir l'indice</button>
-        <p class="small muted">Sans inscription. Ton pronostic reste dans ton navigateur.</p>
-      </form>
-
-      <div class="reveal" id="reveal" tabindex="-1" aria-live="polite" hidden>
-        <div class="duo">
-          <div><span class="face" id="r-me-face"></span><span class="num moi" id="r-me"></span><span class="small strong moi">Toi</span></div>
-          <div><span class="face" id="r-index-face"></span><span class="num" id="r-index"></span><span class="small strong">L'indice</span></div>
-        </div>
-        <div class="reveal-stamp" id="r-stamp"></div>
-        <p class="strong" id="r-message"></p>
-        <div class="rows">
-          <div><span>Écart avec l'indice</span><span id="r-gap"></span></div>
-          <div><span>Les joueurs</span><span id="r-joueurs"></span></div>
-          <div><span>Les marchés</span><span id="r-marches"></span></div>
-          <div id="r-friend-row" hidden><span>Ton ami</span><span id="r-friend"></span></div>
-        </div>
-        <p class="small" id="r-when"></p>
-        <button class="btn btn--plein" type="button" id="share">Défier un ami</button>
-        <p class="small muted share-status" id="share-status" role="status"></p>
-        <button class="link-btn small" type="button" id="replay">Rejouer (démo)</button>
-      </div>
-    </div>
+    <div class="play" id="play" data-question="today"><noscript>Active JavaScript pour jouer.</noscript></div>
   </div>
 </section>
 
@@ -77,7 +53,27 @@
   </div>
 </section>
 
-<section class="section section--gris" style="margin-top: var(--bloc)">
+<section class="section">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">D'autres questions</p><h2 class="h2">Oui ou non, choix, chiffre, date</h2></div>
+      <a class="btn btn--contour" href="questions.html">Toutes les questions</a>
+    </div>
+    <div class="grid" data-questions="autres" data-limit="4"></div>
+  </div>
+</section>
+
+<section class="section section--gris">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">Tournois</p><h2 class="h2">Une série de questions, un classement, un titre</h2></div>
+      <a class="btn btn--contour" href="tournois.html">Tous les tournois</a>
+    </div>
+    <div class="grid grid--large" data-tournaments data-limit="3"></div>
+  </div>
+</section>
+
+<section class="section">
   <div class="wrap stack">
     <div class="section-head">
       <div><p class="kicker">Verdicts de la semaine</p><h2 class="h2">Ce qu'on avait dit, ce qui est arrivé</h2></div>
@@ -86,41 +82,19 @@
     <div class="grid" id="verdicts-preview"></div>
   </div>
 </section>
-
-<section class="section">
-  <div class="wrap stack">
-    <div class="section-head">
-      <div><p class="kicker">Classement</p><h2 class="h2">Mesure-toi aux meilleurs</h2><p class="muted">On note la justesse dans la durée, pas la chance.</p></div>
-      <a class="btn btn--contour" href="classement.html">Voir le classement</a>
-    </div>
-    <div class="duo-cols">
-    <div class="board">
-      <div class="podium" id="podium"></div>
-      <ol class="rank-list" id="rank-list" data-limit="4"></ol>
-    </div>
-    <aside class="defi">
-      <div class="defi-top"><img src="assets/img/logo.svg" alt="" width="100" height="22"><span class="pill">Défi</span></div>
-      <h3>Moi, je dis 40 %. Et toi ?</h3>
-      <p>Ton ami répond sans créer de compte. Au verdict, vous voyez qui avait raison.</p>
-      <div class="spacer"></div>
-      <a class="btn btn--plein" href="index.html">Jouer puis défier un ami</a>
-    </aside>
-    </div>
-  </div>
-</section>
 </main>
 <section class="pro" id="pro">
   <div class="wrap pro-row">
     <div>
       <p class="kicker">Média ou marque ?</p>
-      <h2 class="h2">Un baromètre à votre nom.</h2>
+      <h2 class="h2">Un baromètre ou un tournoi à votre nom.</h2>
     </div>
     <a class="btn btn--blanc" id="pro-contact" href="#pro">Demander une démo</a>
   </div>
 </section>
 <footer class="site-footer">
   <div class="wrap footer-row">
-    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="109" height="24">
+    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="145" height="32">
     <p>Ni sondage, ni pari : aucune mise, des probabilités, des verdicts publiés.</p>
   </div>
 </footer>

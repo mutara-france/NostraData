@@ -10,18 +10,38 @@ Ce dépôt contient la première version du site : une **démo statique**, sans 
 
 | Page | Fichier | Contenu |
 | --- | --- | --- |
-| Aujourd'hui | `index.html` | La question du jour jouable (« Tu dis combien ? »), la révélation de l'indice, les trois temps du jeu, un aperçu des verdicts et du classement |
-| Verdicts | `verdicts.html` | Le carnet de notes : ce qu'on avait dit, ce qui est arrivé, avec un filtre par thème |
+| Aujourd'hui | `index.html` | La question du jour jouable, les trois temps du jeu, un aperçu des questions, des tournois et des verdicts |
+| Questions | `questions.html` | Toutes les questions ouvertes, filtrées par catégorie (barre du haut) et par type |
+| Une question | `question.html?id=…` | Le pronostic, la révélation de l'indice et la règle du verdict |
+| Tournois | `tournois.html` | La liste des tournois |
+| Un tournoi | `tournoi.html?id=…` | Ses questions, son classement, le bouton pour le rejoindre |
+| Verdicts | `verdicts.html` | Le carnet de notes : ce qu'on avait dit, ce qui est arrivé |
 | Classement | `classement.html` | Le podium, le classement de la saison et les règles du jeu |
+| Connexion | `connexion.html` | Connexion et création de compte (démo) |
 
-Ce qui marche déjà :
+### Quatre types de questions
 
-- le curseur de pronostic, avec l'anneau qui change de tête selon la probabilité ;
-- la révélation « toi contre l'indice », avec l'écart et le tampon « Contre la foule » ;
-- le défi à un ami : le bouton partage un lien `?defi=40`, et l'ami voit « Un ami dit 40 %. Et toi ? » ;
-- le pronostic gardé dans le navigateur (`localStorage`). Rien n'est envoyé à un serveur.
+| Type | Ce que donne le joueur | Ce que montre la révélation |
+| --- | --- | --- |
+| Oui ou non (`binaire`) | Une probabilité de 0 à 100 | Toi contre l'indice, l'écart, les joueurs et les marchés |
+| Choix multiple (`choix`) | Son favori et sa confiance | La répartition de l'indice entre les réponses |
+| Chiffre (`nombre`) | Son estimation | L'indice et sa fourchette, sur une échelle |
+| Date (`date`) | Quand ça arrivera | L'indice et sa fourchette, sur une échelle |
 
-Ce qui n'existe pas encore : les comptes, les vraies questions, le calcul de l'indice, les données de marché, le vrai classement.
+### Ce qui marche déjà
+
+- le curseur de pronostic, avec l'anneau qui change de tête ;
+- la révélation pour chaque type de question, avec le tampon « Contre la foule » ;
+- le défi à un ami par lien (`question.html?id=…&defi=40` pour les questions oui ou non) ;
+- les catégories dans la barre du haut, et les filtres par type ;
+- les tournois : on se connecte, on rejoint, on apparaît au classement du tournoi ;
+- la connexion **en mode démo** : rien n'est envoyé, l'e-mail et le mot de passe ne sont ni vérifiés ni enregistrés, seul le pseudonyme est gardé dans le navigateur.
+
+Tout l'état du joueur (pronostics, pseudonyme, tournois rejoints) est dans le `localStorage` du navigateur. Rien n'est envoyé à un serveur.
+
+### Ce qui n'existe pas encore
+
+Les vrais comptes (il faudra un serveur et une vraie authentification avant d'ouvrir l'inscription), les vraies questions, le calcul de l'indice, les données de marché, les vrais classements.
 
 ## Lancer le site en local
 
@@ -42,10 +62,13 @@ Puis ouvrir <http://localhost:8000>.
 ## Organisation des fichiers
 
 ```
-index.html, verdicts.html, classement.html   les trois pages
+index.html, questions.html, question.html    le jeu
+tournois.html, tournoi.html                  les tournois
+verdicts.html, classement.html               le carnet de notes et le classement
+connexion.html                               la connexion (démo)
 assets/css/style.css                         la charte (couleurs, typographie, composants)
 assets/js/data.js                            les données de démonstration et les réglages
-assets/js/app.js                             l'anneau vivant, le pronostic, les verdicts, le classement
+assets/js/app.js                             l'anneau vivant, le jeu, les tournois, la connexion
 assets/img/                                  le logo et le favicon
 assets/fonts/                                la police Inter, hébergée sur place
 ```
@@ -54,7 +77,9 @@ assets/fonts/                                la police Inter, hébergée sur pla
 
 Tout le contenu de démonstration est dans `assets/js/data.js` :
 
-- `today` : la question du jour, son thème, l'indice et sa règle de verdict ;
+- `todayId` : l'identifiant de la question du jour ;
+- `questions` : les questions ouvertes, avec leur type, leur thème, leur tournoi et l'indice ;
+- `tournaments` : les tournois, leur titre à gagner et leur classement ;
 - `verdicts` : les questions tranchées (`said` est la probabilité annoncée pour « Oui ») ;
 - `leaderboard` : le classement ;
 - `contactEmail` : l'adresse de l'espace pro. Tant qu'elle est vide, le bouton « Demander une démo » reste inactif.
@@ -72,6 +97,7 @@ Tout le contenu de démonstration est dans `assets/js/data.js` :
 - La marque : une société australienne s'appelle déjà NostraData.
 - Les droits d'utilisation des données de marché.
 - Les données personnelles : comptes, pseudonymes, consentement.
+- Les récompenses des tournois : pour l'instant un titre, sans lot ni argent.
 
 ## Crédits
 

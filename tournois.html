@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tournois — NostraData</title>
+<meta name="description" content="Les tournois NostraData : une série de questions, un classement dédié, un titre à gagner.">
+<meta name="theme-color" content="#0B0B0B">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="demo-bar">Démo · les questions et les chiffres sont fictifs</div>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="200" height="44"></a>
+    <nav class="tabs" aria-label="Navigation principale">
+      <a class="tab" href="index.html">Aujourd'hui</a>
+      <a class="tab" href="questions.html">Questions</a>
+      <a class="tab is-active" href="tournois.html" aria-current="page">Tournois</a>
+      <a class="tab" href="verdicts.html">Verdicts</a>
+      <a class="tab" href="classement.html">Classement</a>
+    </nav>
+    <div class="header-right">
+      <span class="streak" id="streak" hidden></span>
+      <a class="btn btn--petit" id="auth-link" href="connexion.html">Connexion</a>
+    </div>
+  </div>
+  <div class="cats-bar">
+    <nav class="wrap cats" id="cats" aria-label="Catégories"><a class="cat t-politique" href="questions.html?theme=politique">Politique</a><a class="cat t-sport" href="questions.html?theme=sport">Sport</a><a class="cat t-culture" href="questions.html?theme=culture">Culture</a><a class="cat t-economie" href="questions.html?theme=economie">Économie</a><a class="cat t-sciences" href="questions.html?theme=sciences">Sciences</a></nav>
+  </div>
+</header>
+<main>
+<section class="section">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">Tournois</p><h1 class="h2">Une série de questions, un classement, un titre</h1><p class="muted">Gratuits, sans mise. On y gagne un titre et une place au classement.</p></div>
+    </div>
+    <div class="grid grid--large" data-tournaments></div>
+  </div>
+</section>
+<section class="section section--gris">
+  <div class="wrap stack">
+    <h2 class="h2">Comment marche un tournoi</h2>
+    <div class="grid">
+      <div class="step step--1"><span class="face" data-face="40,partage"></span><div><h3>1. Tu rejoins</h3><p>Un compte suffit. Tu peux arriver en cours de route.</p></div></div>
+      <div class="step step--2"><span class="face" data-face="62,confiant"></span><div><h3>2. Tu réponds</h3><p>À chaque question du tournoi, dès son ouverture.</p></div></div>
+      <div class="step step--3"><span class="face" data-face="100,sur"></span><div><h3>3. Tu grimpes</h3><p>Chaque verdict fait bouger le classement du tournoi.</p></div></div>
+    </div>
+  </div>
+</section>
+</main>
+<section class="pro" id="pro">
+  <div class="wrap pro-row">
+    <div>
+      <p class="kicker">Média ou marque ?</p>
+      <h2 class="h2">Un baromètre ou un tournoi à votre nom.</h2>
+    </div>
+    <a class="btn btn--blanc" id="pro-contact" href="#pro">Demander une démo</a>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="145" height="32">
+    <p>Ni sondage, ni pari : aucune mise, des probabilités, des verdicts publiés.</p>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

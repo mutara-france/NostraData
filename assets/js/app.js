@@ -207,7 +207,7 @@
     return html + '<p class="small">' + esc(q.verdictLabel) + ". " + esc(q.rule) + "</p>" +
       '<button class="btn btn--plein" type="button" id="share">Défier un ami</button>' +
       '<p class="small muted share-status" id="share-status" role="status"></p>' +
-      '<button class="link-btn small" type="button" id="replay">Rejouer (démo)</button>';
+      '<button class="link-btn small" type="button" id="replay">Modifier ma réponse</button>';
   }
 
   function initPlay() {
@@ -609,7 +609,7 @@
     document.title = p.name + " — Profil NostraData";
     root.innerHTML = '<section class="section"><div class="wrap stack">' +
       profileHead(p.name, p.title, p.since, face(p.score / 100, p.score >= 80 ? "sur" : "confiant"), false) +
-      '<div class="tiles">' + tile("Indice de fiabilité", String(p.score), "sur 100") + tile("Rang général", ordinal(p.rank), "sur " + ND.leaderboard.length + " classés dans la démo") +
+      '<div class="tiles">' + tile("Indice de fiabilité", String(p.score), "sur 100") + tile("Rang général", ordinal(p.rank), "sur " + ND.leaderboard.length + " classés") +
       tile("Questions tranchées", String(p.resolved), "depuis " + p.since) + tile("Vu juste", pct(right), "du bon côté de 50" + NNBSP + "%") + "</div>" +
       '<div class="duo-cols"><div class="profile-calib">' + calibCard(calib, "Quand " + esc(p.name) + " dit 70" + NNBSP + "%, ça arrive " + Math.round(at70 / 10) + " fois sur 10.", p.resolved + " questions tranchées, ratés compris.") + "</div>" +
       '<div class="board"><h2 class="h3">Par catégorie</h2><div class="cat-rows">' + cats + "</div></div></div></div></section>" +

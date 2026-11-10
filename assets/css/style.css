@@ -340,6 +340,80 @@ a { color: inherit; }
 .field select:hover { border-color: var(--encre); }
 .btn[aria-disabled="true"]:hover { transform: none; }
 
+/* ---------- Outil d'analyse (page question) ---------- */
+.stack-s { display: flex; flex-direction: column; gap: 16px; }
+.xgrid { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 1000px) { .xgrid { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); } }
+.panel { border: 1px solid var(--gris-200); border-radius: var(--rayon); padding: 22px; display: flex; flex-direction: column; gap: 14px; background: var(--blanc); min-width: 0; }
+.panel-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; }
+.panel a, .muted a { color: inherit; }
+.tiles .tile .num { overflow-wrap: anywhere; white-space: normal; }
+#x-stats { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+#x-stats .tile .num { font-size: 30px; line-height: 1.1; letter-spacing: -0.025em; }
+@media (min-width: 900px) { #x-stats .tile .num { font-size: 34px; } }
+
+.chart { display: flex; gap: 10px; }
+.chart-y { flex: 0 0 auto; max-width: 96px; display: flex; flex-direction: column; justify-content: space-between; text-align: right; font-size: 15px; line-height: 18px; color: var(--gris-600); }
+.chart-plot { position: relative; flex: 1 1 0; min-width: 0; height: 200px; border-left: 1px solid var(--gris-200); border-bottom: 1px solid var(--gris-200); }
+@media (min-width: 900px) { .chart-plot { height: 260px; } }
+.chart-plot svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.chart-end, .chart-mark { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; }
+.chart-end { right: -7px; margin-left: 0; background: var(--encre); }
+.chart-mark { background: var(--blanc); border: 4px solid #E0458A; box-sizing: border-box; }
+.chart-x { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; line-height: 20px; color: var(--gris-600); }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.lg-line { width: 22px; height: 4px; border-radius: 2px; background: var(--encre); }
+.histo { display: flex; align-items: flex-end; gap: 4px; height: 110px; border-bottom: 1px solid var(--gris-200); }
+.histo span { flex: 1 1 0; background: var(--gris-200); border-radius: 4px 4px 0 0; }
+.histo span.is-me { background: var(--rose); }
+.voices { display: flex; flex-direction: column; gap: 12px; }
+.voice .bar-fill { background: var(--gris-200); }
+.voice--index { border-top: 1px solid var(--gris-200); padding-top: 12px; }
+.voice--index .bar-top { font-weight: 600; }
+.voice--index .bar-fill { background: var(--encre); }
+
+.checks { display: flex; flex-direction: column; gap: 10px; }
+.check { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 17px; }
+.check input { width: 22px; height: 22px; margin: 0; accent-color: var(--encre); flex: 0 0 auto; }
+.args { display: flex; flex-direction: column; gap: 12px; }
+.arg { background: var(--gris-50); border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.arg-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.arg .pill { font-size: 15px; line-height: 20px; padding: 4px 12px; }
+.arg .pill--gris { background: var(--blanc); }
+.arg-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.field textarea { font: inherit; font-size: 17px; line-height: 25px; padding: 12px 16px; border: 1.5px solid var(--gris-200); border-radius: 14px; background: var(--blanc); color: var(--encre); width: 100%; resize: vertical; }
+.field textarea:hover { border-color: var(--encre); }
+.field textarea[readonly] { background: var(--gris-50); font-size: 15px; line-height: 21px; word-break: break-all; }
+
+/* ---------- Questions : barre d'outils et tableau ---------- */
+.toolbar { display: flex; flex-wrap: wrap; gap: 16px; }
+.toolbar .field { flex: 1 1 240px; max-width: 420px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--gris-200); border-radius: var(--rayon); }
+.qtable { width: 100%; border-collapse: collapse; font-size: 17px; }
+.qtable th { text-align: left; font-size: 16px; font-weight: 600; color: var(--gris-600); padding: 14px 18px; background: var(--gris-50); white-space: nowrap; }
+.qtable td { padding: 14px 18px; border-top: 1px solid var(--gris-200); vertical-align: top; }
+.qtable td:first-child a { font-weight: 600; text-decoration: none; }
+.qtable td:first-child a:hover { text-decoration: underline; }
+.qtable .pill { font-size: 15px; line-height: 20px; padding: 3px 11px; margin-top: 6px; }
+.qtable td:not(:first-child) { white-space: nowrap; }
+.col-wide { display: none; }
+@media (min-width: 800px) { .col-wide { display: table-cell; } }
+.propose { max-width: 720px; }
+
+/* ---------- Calibration et widget ---------- */
+.calib-box { max-width: 860px; margin: 0 auto; border: 1.5px solid var(--encre); border-radius: 28px; padding: 24px; }
+@media (min-width: 900px) { .calib-box { padding: 40px; } }
+.calib-box .rows > div > span:first-child { color: var(--encre); }
+.calib-box .rows > div > span:last-child { flex: 0 0 auto; white-space: nowrap; }
+.widget-body { background: transparent; }
+.widget { max-width: 360px; margin: 0 auto; background: var(--blanc); border: 1.5px solid var(--encre); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.widget .qcard-top img { height: 24px; width: auto; }
+.widget svg { width: 100%; height: 56px; }
+.widget .qcard-index .face { width: 50px; height: 50px; }
+.widget .qcard-index .num { font-size: 42px; }
+.widget .qcard-index .num--texte { font-size: 24px; }
+
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }

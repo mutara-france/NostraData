@@ -16,7 +16,10 @@ Ce dépôt contient la première version du site : une **démo statique**, sans 
 | Tournois | `tournois.html` | La liste des tournois |
 | Un tournoi | `tournoi.html?id=…` | Ses questions, son classement, le bouton pour le rejoindre |
 | Verdicts | `verdicts.html` | Le carnet de notes : ce qu'on avait dit, ce qui est arrivé |
-| Classement | `classement.html` | Le podium, le classement de la saison et les règles du jeu |
+| Classement | `classement.html` | Le classement général et par catégorie, avec le podium |
+| Profil public | `profil.html?u=…` | L'indice de fiabilité d'un joueur, sa calibration, ses scores par catégorie, ses verdicts et ses tournois |
+| Intelligence | `intelligence.html` | NostraData Intelligence : les rapports par thème, sur abonnement |
+| Business | `business.html` | NostraData Business : la plateforme interne, les tournois dotés et le simulateur de dotation |
 | Connexion | `connexion.html` | Connexion et création de compte (démo) |
 
 ### Quatre types de questions
@@ -35,9 +38,26 @@ Ce dépôt contient la première version du site : une **démo statique**, sans 
 - le défi à un ami par lien (`question.html?id=…&defi=40` pour les questions oui ou non) ;
 - les catégories dans la barre du haut, et les filtres par type ;
 - les tournois : on se connecte, on rejoint, on apparaît au classement du tournoi ;
+- les tournois d'entreprise : nom visible ou anonyme, accès ouvert ou réservé à certains titres, dotation et répartition affichées ;
+- le simulateur de dotation de la page Business : meilleur prévisionniste, 3 meilleurs, ou tous les répondants ;
+- le classement général et par catégorie, avec un lien vers le profil public de chaque joueur ;
 - la connexion **en mode démo** : rien n'est envoyé, l'e-mail et le mot de passe ne sont ni vérifiés ni enregistrés, seul le pseudonyme est gardé dans le navigateur.
 
 Tout l'état du joueur (pronostics, pseudonyme, tournois rejoints) est dans le `localStorage` du navigateur. Rien n'est envoyé à un serveur.
+
+### Les règles de dotation (proposition de démonstration)
+
+| Mode | Répartition |
+| --- | --- |
+| Le meilleur prévisionniste | 100 % au premier du classement du tournoi |
+| Les 3 meilleurs | 50 %, 30 %, 20 % (réglable dans `sharesTopThree`, fichier `data.js`) |
+| Tous les répondants | Au prorata de la justesse ; le site affiche la moyenne par répondant |
+
+Aucun paiement n'existe dans la démo, et les frais de service de NostraData ne sont pas encore définis.
+
+### Les profils publics dans la démo
+
+Les dix joueurs du classement ont un profil. Leurs scores par catégorie, leur calibration et leur historique sont **dérivés du classement par un calcul fixe** dans `app.js` : ce ne sont pas de vraies mesures. Le joueur connecté a un profil sans indice, qui liste ses réponses en attente.
 
 ### Ce qui n'existe pas encore
 
@@ -65,6 +85,8 @@ Puis ouvrir <http://localhost:8000>.
 index.html, questions.html, question.html    le jeu
 tournois.html, tournoi.html                  les tournois
 verdicts.html, classement.html               le carnet de notes et le classement
+profil.html                                  le profil public d'un joueur
+intelligence.html, business.html             les offres professionnelles
 connexion.html                               la connexion (démo)
 assets/css/style.css                         la charte (couleurs, typographie, composants)
 assets/js/data.js                            les données de démonstration et les réglages
@@ -79,7 +101,8 @@ Tout le contenu de démonstration est dans `assets/js/data.js` :
 
 - `todayId` : l'identifiant de la question du jour ;
 - `questions` : les questions ouvertes, avec leur type, leur thème, leur tournoi et l'indice ;
-- `tournaments` : les tournois, leur titre à gagner et leur classement ;
+- `tournaments` : les tournois, leur titre ou leur dotation, leur entreprise (visible ou anonyme) et leur classement ;
+- `reports` : les exemples de rapports de la page Intelligence ;
 - `verdicts` : les questions tranchées (`said` est la probabilité annoncée pour « Oui ») ;
 - `leaderboard` : le classement ;
 - `contactEmail` : l'adresse de l'espace pro. Tant qu'elle est vide, le bouton « Demander une démo » reste inactif.
@@ -97,7 +120,8 @@ Tout le contenu de démonstration est dans `assets/js/data.js` :
 - La marque : une société australienne s'appelle déjà NostraData.
 - Les droits d'utilisation des données de marché.
 - Les données personnelles : comptes, pseudonymes, consentement.
-- Les récompenses des tournois : pour l'instant un titre, sans lot ni argent.
+- Les dotations des tournois d'entreprise : rémunérer des joueurs en argent demande un cadre juridique et fiscal précis, à valider avant tout versement.
+- Les prix de NostraData Intelligence et les frais de service de NostraData Business.
 
 ## Crédits
 

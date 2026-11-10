@@ -29,6 +29,49 @@
   function findTournament(id) { return (ND.tournaments || []).filter(function (t) { return t.id === id; })[0] || null; }
   function moodFor(p) { return p >= 85 ? "sur" : p >= 60 ? "confiant" : p >= 40 ? "partage" : "sceptique"; }
   function count(n) { return n.toLocaleString("fr-FR"); }
+  function euros(n) { return Math.round(n).toLocaleString("fr-FR") + "\u00a0€"; }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function hash(s) { var h = 7, i; s = String(s); for (i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) % 9973; } return h; }
+  function profileLink(name) { return "profil.html?u=" + encodeURIComponent(name); }
+  function themeLabel(id) { return (THEMES.filter(function (t) { return t[0] === id; })[0] || [])[1] || ""; }
+
+  /* ---------- Profils publics ----------
+     Démo : les scores par catégorie, la calibration et l'historique sont dérivés du classement
+     par un calcul fixe (toujours le même résultat pour un même pseudonyme). Ce ne sont pas de vraies mesures. */
+  function findPlayer(name) { return (ND.leaderboard || []).filter(function (p) { return p.name === name; })[0] || null; }
+  function catScore(p, theme) { return clamp(p.score + (hash(p.name + theme) % 13) - 6, 40, 96); }
+  function catResolved(p, theme) { return Math.max(4, Math.round(p.resolved / 5) + (hash(theme + p.name) % 9) - 4); }
+  function ranking(theme) {
+    var rows = ND.leaderboard.map(function (p) { return { name: p.name, title: p.title, score: theme ? catScore(p, theme) : p.score }; });
+    rows.sort(function (a, b) { return b.score - a.score || a.name.localeCompare(b.name); });
+    rows.forEach(function (r, i) { r.rank = i + 1; });
+    return rows;
+  }
+  function rankIn(theme, name) { return ranking(theme).filter(function (r) { return r.name === name; })[0].rank; }
+  function ordinal(n) { return n + (n === 1 ? "er" : "e"); }
+  function calibrationOf(p) {
+    var spread = Math.round((100 - p.score) / 4);
+    return [10, 30, 50, 70, 90].map(function (said) { return { said: said, happened: clamp(said + (hash(p.name + said) % (2 * spread + 1)) - spread, 2, 98) }; });
+  }
+  function historyOf(p) {
+    return ND.verdicts.slice(0, 6).map(function (v, i) {
+      var lean = v.result === "Oui" ? 1 : -1;
+      var said = clamp(Math.round(v.said + lean * (p.score - 70) * 0.5 + (hash(p.name + i) % 29) - 14), 3, 97);
+      var ok = (said >= 50) === (v.result === "Oui");
+      return { v: v, said: said, ok: ok, points: ok ? 5 + Math.round(Math.abs(said - 50) / 2) : -3 - Math.round(Math.abs(said - 50) / 3) };
+    });
+  }
+
+  // ---------- Dotation d'un tournoi d'entreprise : répartition calculée automatiquement ----------
+  var MODES = { meilleur: "Le meilleur prévisionniste", trois: "Les 3 meilleurs", tous: "Tous les répondants" };
+  function distributionRows(amount, mode, n) {
+    var shares = ND.sharesTopThree || [50, 30, 20];
+    if (mode === "meilleur") { return row("1er du classement", euros(amount)); }
+    if (mode === "trois") {
+      return shares.map(function (share, i) { return row(ordinal(i + 1) + " du classement · " + share + NNBSP + "%", euros(amount * share / 100)); }).join("");
+    }
+    return row("Répondants rémunérés", count(n)) + row("En moyenne par répondant", euros(n ? amount / n : 0)) + row("Clé de répartition", "au prorata de la justesse");
+  }
 
   // Valeur lisible d'une question « nombre » ou « date ».
   function fmt(q, v) {
@@ -72,7 +115,8 @@
     var link = $("auth-link"), u = user();
     if (link && u) {
       link.textContent = u.pseudo;
-      link.setAttribute("aria-label", "Mon compte : " + u.pseudo);
+      link.href = "profil.html";
+      link.setAttribute("aria-label", "Mon profil : " + u.pseudo);
     }
     var cats = $("cats");
     if (cats) {
@@ -327,6 +371,7 @@
     return '<a class="tcard t-' + t.theme + (t.status === "a-venir" ? " tcard--avenir" : "") + '" href="tournoi.html?id=' + t.id + '">' +
       '<div class="qcard-top"><span class="pill pill--inverse">' + esc(t.statusLabel) + "</span>" + (joined ? '<span class="small strong">Tu participes</span>' : "") + "</div>" +
       "<h3>" + esc(t.name) + "</h3><p>" + esc(t.description) + "</p>" +
+      (t.sponsor ? '<p class="small strong">Proposé par ' + esc(t.sponsor.visible ? t.sponsor.name : "une entreprise anonyme") + (t.dotation ? " · " + euros(t.dotation.amount) : "") + "</p>" : "") +
       '<div class="spacer"></div>' +
       '<div class="tcard-meta small"><span><span class="strong">' + open + "</span> sur " + t.total + " questions ouvertes</span>" +
       (t.players ? '<span><span class="strong">' + count(t.players) + "</span> joueurs</span>" : "") + "</div>" +
@@ -350,7 +395,16 @@
     $("t-name").textContent = t.name;
     $("t-desc").textContent = t.description;
     $("t-meta").innerHTML = '<span class="strong">' + esc(t.ends) + "</span>" + (t.players ? "<span>" + count(t.players) + " joueurs</span>" : "");
-    $("t-reward").textContent = t.reward;
+    $("t-reward").textContent = t.reward + (t.dotation ? " · " + MODES[t.dotation.mode].toLowerCase() : "");
+    $("t-distribution").innerHTML = t.dotation ? distributionRows(t.dotation.amount, t.dotation.mode, t.players) : "";
+    $("t-distribution").hidden = !t.dotation;
+    $("t-audience").textContent = t.audience ? t.audience.label : "Ouvert à tous les joueurs";
+    var sponsor = $("t-sponsor");
+    if (t.sponsor) {
+      sponsor.textContent = "Proposé par " + (t.sponsor.visible ? t.sponsor.name : "une entreprise anonyme") + (t.sponsor.visible && t.sponsor.about ? " · " + t.sponsor.about : "");
+      sponsor.hidden = false;
+    }
+    var titles = t.audience && t.audience.titles;
     $("t-progress").innerHTML = Array.apply(null, Array(t.total)).map(function (_, i) { return '<span class="' + (i < qs.length ? "is-open" : "") + '"></span>'; }).join("");
     $("t-progress-label").textContent = qs.length + " question" + (qs.length > 1 ? "s" : "") + " ouverte" + (qs.length > 1 ? "s" : "") + " sur " + t.total;
     $("t-questions").innerHTML = qs.length ? qs.map(questionCard).join("") : '<p class="muted">Les questions arrivent à l\'ouverture du tournoi.</p>';
@@ -364,6 +418,16 @@
     }
     function drawJoin() {
       var u = user(), joined = (readStore().tournaments || []).indexOf(t.id) >= 0;
+      var eligible = !titles || (u && titles.indexOf(u.title) >= 0);
+      join.removeAttribute("aria-disabled");
+      if (u && !eligible) {
+        join.textContent = t.audience.label;
+        join.href = "#";
+        join.setAttribute("aria-disabled", "true");
+        note.textContent = "Ton titre actuel : Curieux. Gagne en fiabilité pour y accéder.";
+        drawBoard(null);
+        return;
+      }
       if (!u) {
         join.textContent = "Se connecter pour participer";
         join.href = "connexion.html?retour=" + encodeURIComponent("tournoi.html?id=" + t.id);
@@ -378,6 +442,7 @@
     join.addEventListener("click", function (ev) {
       if (!user()) { return; }
       ev.preventDefault();
+      if (join.getAttribute("aria-disabled") === "true") { return; }
       var data = readStore(), list = data.tournaments || [], i = list.indexOf(t.id);
       if (i >= 0) { list.splice(i, 1); } else { list.push(t.id); }
       data.tournaments = list;
@@ -400,16 +465,16 @@
       '<div class="said"><span class="strong">On avait dit ' + pct(v.said) + '</span><span class="muted">Verdict du ' + esc(v.date) + "</span></div>" +
       "</article>";
   }
-  function calibCard() {
-    var dots = (ND.calibration || []).map(function (p) {
+  function calibCard(points, title, footer) {
+    var dots = (points || ND.calibration || []).map(function (p) {
       return '<circle cx="' + (20 + p.said * 2) + '" cy="' + (220 - p.happened * 2) + '" r="8" fill="#FFFFFF"/>';
     }).join("");
-    return '<aside class="calib"><div class="kicker">Notre carnet de notes</div>' +
-      "<h3>Quand on dit 70" + NNBSP + "%, ça arrive 7 fois sur 10.</h3>" +
+    return '<aside class="calib"><div class="kicker">' + (points ? "Sa calibration" : "Notre carnet de notes") + "</div>" +
+      "<h3>" + (title || "Quand on dit 70" + NNBSP + "%, ça arrive 7 fois sur 10.") + "</h3>" +
       '<svg viewBox="0 0 240 240" role="img" aria-label="Les probabilités annoncées suivent de près ce qui est arrivé">' +
       '<path d="M20 20 V220 H220" stroke="#D9E0FF" stroke-width="2" fill="none"/>' +
       '<path d="M20 220 L220 20" stroke="#D9E0FF" stroke-width="2" stroke-dasharray="5 7" fill="none"/>' + dots + "</svg>" +
-      "<p>" + (ND.resolvedCount || 0) + " questions tranchées, ratés compris.</p></aside>";
+      "<p>" + (footer || (ND.resolvedCount || 0) + " questions tranchées, ratés compris.") + "</p></aside>";
   }
   function initVerdicts() {
     var preview = $("verdicts-preview");
@@ -443,24 +508,146 @@
   // ---------- Classement ----------
   function podium(rows) {
     function spot(r, cls) {
-      return '<div class="' + cls + '"><span class="face">' + face(r.score / 100, r.rank === 1 ? "sur" : "confiant") + '</span><span class="name">' + esc(r.name) + "</span>" +
+      return '<div class="' + cls + '"><span class="face">' + face(r.score / 100, r.rank === 1 ? "sur" : "confiant") + '</span><a class="name" href="' + profileLink(r.name) + '">' + esc(r.name) + "</a>" +
         '<div class="plinth"><span class="num">' + r.rank + "</span><span>" + r.score + "</span></div></div>";
     }
     return spot(rows[1], "p2") + spot(rows[0], "p1") + spot(rows[2], "p3");
   }
   function rankRow(r, me) {
-    return "<li" + (me ? ' class="me"' : "") + '><span class="rank">' + esc(r.rank) + '</span><span class="who"><span class="name">' + esc(r.name) +
-      '</span><br><span class="title">' + esc(r.title) + '</span></span><span class="score">' + esc(r.score) + "</span></li>";
+    return "<li" + (me ? ' class="me"' : "") + '><span class="rank">' + esc(r.rank) + '</span><span class="who"><a class="name" href="' + (me ? "profil.html" : profileLink(r.name)) + '">' + esc(r.name) +
+      '</a><br><span class="title">' + esc(r.title) + '</span></span><span class="score">' + esc(r.score) + "</span></li>";
   }
+  // Classement général, ou par catégorie.
   function initBoard() {
     var pod = $("podium"), list = $("rank-list");
     if (!pod || !list) { return; }
-    var rows = ND.leaderboard, limit = parseInt(list.dataset.limit, 10) || rows.length, u = user();
-    pod.innerHTML = podium(rows);
-    var played = Object.keys(readStore().answers || {}).length;
-    var me = { rank: "–", name: u ? u.pseudo : "Toi", score: "–",
-      title: played ? "Non classé · encore " + ND.minResolved + " questions tranchées" : "Réponds à la question du jour pour commencer" };
-    list.innerHTML = rows.slice(3, Math.max(4, limit)).map(function (r) { return rankRow(r, false); }).join("") + rankRow(me, true);
+    var limit = parseInt(list.dataset.limit, 10) || ND.leaderboard.length, u = user(), filters = $("board-filters"), theme = "";
+    function render() {
+      var rows = ranking(theme);
+      var played = Object.keys(readStore().answers || {}).length;
+      var me = { rank: "–", name: u ? u.pseudo : "Toi", score: "–",
+        title: played ? "Non classé · encore " + ND.minResolved + " questions tranchées" : "Réponds à la question du jour pour commencer" };
+      pod.innerHTML = podium(rows);
+      list.innerHTML = rows.slice(3, Math.max(4, limit)).map(function (r) { return rankRow(r, false); }).join("") + rankRow(me, true);
+      if (filters) {
+        filters.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.theme === theme)); });
+        $("board-label").textContent = theme ? "Classement · " + themeLabel(theme) : "Classement général";
+      }
+    }
+    if (filters) {
+      filters.innerHTML = [["", "Général"]].concat(THEMES).map(function (t) {
+        return '<button type="button" class="filter' + (t[0] ? " t-" + t[0] : "") + '" data-theme="' + t[0] + '">' + t[1] + "</button>";
+      }).join("");
+      filters.addEventListener("click", function (ev) {
+        var b = ev.target.closest("button");
+        if (b) { theme = b.dataset.theme; render(); }
+      });
+    }
+    render();
+  }
+
+  // ---------- Profil public ----------
+  function tile(label, value, sub) {
+    return '<div class="tile"><p class="kicker">' + esc(label) + '</p><p class="num">' + esc(value) + '</p><p class="small muted">' + esc(sub) + "</p></div>";
+  }
+  function notice(text, href, cta) {
+    return '<section class="section"><div class="wrap stack"><h1 class="h2">' + esc(text) + '</h1><div><a class="btn" href="' + href + '">' + esc(cta) + "</a></div></div></section>";
+  }
+  function profileHead(name, title, since, faceHtml, own) {
+    return '<div class="profile-head"><span class="face profile-face">' + faceHtml + "</span>" +
+      '<div class="profile-id"><p class="kicker">' + (own ? "Ton profil public" : "Profil public") + '</p><h1 class="h2">' + esc(name) + "</h1>" +
+      '<div class="hero-pills"><span class="pill">' + esc(title) + "</span>" + (since ? '<span class="pill pill--gris">Depuis ' + esc(since) + "</span>" : "") + "</div></div>" +
+      '<div class="profile-actions"><button class="btn btn--contour" type="button" id="p-share">Partager ce profil</button><p class="small muted" id="p-share-status" role="status"></p></div></div>';
+  }
+  function wireShare(name) {
+    $("p-share").addEventListener("click", function () {
+      var url = new URL(profileLink(name), window.location.href).toString(), status = $("p-share-status");
+      if (navigator.share) {
+        navigator.share({ title: name + " sur NostraData", url: url }).catch(function () { /* partage annulé */ });
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () { status.textContent = "Lien copié."; }, function () { status.textContent = url; });
+      } else { status.textContent = url; }
+    });
+  }
+  function initProfile() {
+    var root = $("profile");
+    if (!root) { return; }
+    var name = param("u"), u = user(), p = name ? findPlayer(name) : null;
+    if (!name && !u) { root.innerHTML = notice("Connecte-toi pour voir ton profil.", "connexion.html?retour=profil.html", "Me connecter"); return; }
+    if (name && !p && !(u && u.pseudo === name)) { root.innerHTML = notice("Ce profil n'existe pas.", "classement.html", "Voir le classement"); return; }
+
+    if (!p) {   // le profil du joueur connecté : pas encore de verdict
+      var answers = readStore().answers || {}, ids = Object.keys(answers).filter(findQuestion), joined = readStore().tournaments || [];
+      document.title = u.pseudo + " — Profil NostraData";
+      root.innerHTML = '<section class="section"><div class="wrap stack">' + profileHead(u.pseudo, "Curieux", "", face(Math.min(1, ids.length / ND.minResolved), "partage"), true) +
+        '<div class="tiles">' + tile("Indice de fiabilité", "–", "Après " + ND.minResolved + " questions tranchées") + tile("Réponses en attente", String(ids.length), "Le verdict n'est pas encore tombé") +
+        tile("Tournois rejoints", String(joined.length), "Voir les tournois ouverts") + "</div>" +
+        '<div class="rule-box"><p class="q">Ce profil est public.</p><p>Il affichera ton indice de fiabilité, ta calibration et tes verdicts dès que tes premières questions seront tranchées.</p></div>' +
+        (ids.length ? '<h2 class="h3">Tes réponses en attente</h2><div class="grid">' + ids.map(function (id) { return questionCard(findQuestion(id)); }).join("") + "</div>"
+          : '<div><a class="btn" href="index.html">Jouer la question du jour</a></div>') + "</div></section>";
+      wireShare(u.pseudo);
+      return;
+    }
+
+    var calib = calibrationOf(p), history = historyOf(p), at70 = calib[3].happened;
+    var right = Math.round(48 + p.score * 0.32);
+    var cats = THEMES.map(function (t) {
+      var sc = catScore(p, t[0]);
+      return '<div class="cat-row t-' + t[0] + '"><div class="cat-top"><span class="pill pill--theme">' + t[1] + '</span><span class="small muted">' + ordinal(rankIn(t[0], p.name)) + " · " + catResolved(p, t[0]) + ' questions</span><span class="score">' + sc + "</span></div>" +
+        '<div class="bar-track"><div class="bar-fill" style="width: ' + sc + '%"></div></div></div>';
+    }).join("");
+    var cards = history.map(function (h) {
+      return '<article class="card t-' + h.v.theme + '"><div><span class="pill pill--theme">' + esc(h.v.themeLabel) + "</span></div>" +
+        '<h3 class="q">' + esc(typo(h.v.text)) + '</h3><div class="spacer"></div>' +
+        '<div><span class="stamp ' + (h.ok ? "stamp--juste" : "stamp--rate") + '">' + (h.ok ? "Vu juste" : "Raté") + "</span></div>" +
+        '<div class="said"><span class="strong">Avait dit ' + pct(h.said) + " · résultat : " + esc(h.v.result) + '</span><span class="muted">' + (h.points > 0 ? "+" : "−") + Math.abs(h.points) + " points · " + esc(h.v.date) + "</span></div></article>";
+    }).join("");
+    var tours = ND.tournaments.map(function (t) {
+      var r = t.leaderboard.filter(function (x) { return x.name === p.name; })[0];
+      return r ? '<a class="tour-row t-' + t.theme + '" href="tournoi.html?id=' + t.id + '"><span class="pill pill--theme">' + esc(t.name) + '</span><span class="strong">' + ordinal(r.rank) + '</span><span class="muted">indice ' + r.score + "</span></a>" : "";
+    }).join("");
+    document.title = p.name + " — Profil NostraData";
+    root.innerHTML = '<section class="section"><div class="wrap stack">' +
+      profileHead(p.name, p.title, p.since, face(p.score / 100, p.score >= 80 ? "sur" : "confiant"), false) +
+      '<div class="tiles">' + tile("Indice de fiabilité", String(p.score), "sur 100") + tile("Rang général", ordinal(p.rank), "sur " + ND.leaderboard.length + " classés dans la démo") +
+      tile("Questions tranchées", String(p.resolved), "depuis " + p.since) + tile("Vu juste", pct(right), "du bon côté de 50" + NNBSP + "%") + "</div>" +
+      '<div class="duo-cols"><div class="profile-calib">' + calibCard(calib, "Quand " + esc(p.name) + " dit 70" + NNBSP + "%, ça arrive " + Math.round(at70 / 10) + " fois sur 10.", p.resolved + " questions tranchées, ratés compris.") + "</div>" +
+      '<div class="board"><h2 class="h3">Par catégorie</h2><div class="cat-rows">' + cats + "</div></div></div></div></section>" +
+      '<section class="section section--gris"><div class="wrap stack"><div class="section-head"><div><p class="kicker">Historique</p><h2 class="h2">Ses derniers verdicts</h2></div></div><div class="grid">' + cards + "</div></div></section>" +
+      (tours ? '<section class="section"><div class="wrap stack"><h2 class="h2">Ses tournois</h2><div class="tour-rows">' + tours + "</div></div></section>" : "");
+    wireShare(p.name);
+  }
+
+  // ---------- NostraData Intelligence : exemples de rapports ----------
+  function initReports() {
+    document.querySelectorAll("[data-reports]").forEach(function (el) {
+      el.innerHTML = (ND.reports || []).map(function (r) {
+        return '<article class="card t-' + r.theme + '"><div><span class="pill pill--theme">' + esc(r.themeLabel) + '</span></div><h3 class="h3">' + esc(r.title) + "</h3><p>" + esc(r.summary) + '</p><div class="spacer"></div>' +
+          '<div class="said"><span class="strong">' + esc(r.rhythm) + '</span><span class="muted">Sur abonnement</span></div></article>';
+      }).join("");
+    });
+  }
+
+  // ---------- NostraData Business : simulateur de dotation (rien n'est envoyé) ----------
+  function initSimulator() {
+    var form = $("sim-form");
+    if (!form) { return; }
+    var out = $("sim-out"), range = $("sim-n"), aud = $("sim-audience");
+    function draw() {
+      var amount = clamp(parseInt($("sim-amount").value, 10) || 0, 0, 1000000), mode = form.elements.mode.value, visible = form.elements.visible.value === "oui";
+      var n = parseInt(range.value, 10), name = $("sim-name").value.trim() || "Votre entreprise";
+      $("sim-name-field").hidden = !visible;
+      $("sim-n-field").hidden = mode !== "tous";
+      $("sim-n-label").textContent = count(n) + " répondants attendus";
+      range.style.setProperty("--val", ((n - range.min) / (range.max - range.min) * 100) + "%");
+      out.innerHTML = '<p class="kicker">Aperçu de votre tournoi</p><h3 class="h3">Proposé par ' + esc(visible ? name : "une entreprise anonyme") + "</h3>" +
+        "<p>" + esc(aud.options[aud.selectedIndex].text) + '</p><p class="num sim-amount">' + euros(amount) + '</p><p class="strong">' + MODES[mode] + "</p>" +
+        '<div class="rows rows--sombre">' + distributionRows(amount, mode, n) + "</div>" +
+        '<p class="small">Répartition calculée automatiquement. Aucune mise pour les participants.</p>';
+    }
+    form.addEventListener("input", draw);
+    form.addEventListener("submit", function (ev) { ev.preventDefault(); });
+    draw();
   }
 
   // ---------- Connexion (démo : rien n'est envoyé, le mot de passe n'est ni vérifié ni gardé) ----------
@@ -509,17 +696,17 @@
     });
   }
 
-  // ---------- Espace pro ----------
+  // ---------- Offres professionnelles : boutons de contact ----------
   function initPro() {
-    var b = $("pro-contact");
-    if (!b) { return; }
-    if (ND.contactEmail) {
-      b.href = "mailto:" + ND.contactEmail + "?subject=" + encodeURIComponent("Démo NostraData");
-    } else {
-      b.textContent = "Démo bientôt disponible";
-      b.setAttribute("aria-disabled", "true");
-      b.removeAttribute("href");
-    }
+    document.querySelectorAll("[data-contact]").forEach(function (b) {
+      if (ND.contactEmail) {
+        b.href = "mailto:" + ND.contactEmail + "?subject=" + encodeURIComponent(b.getAttribute("data-contact"));
+      } else {
+        b.textContent = "Contact bientôt disponible";
+        b.setAttribute("aria-disabled", "true");
+        b.removeAttribute("href");
+      }
+    });
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -530,6 +717,9 @@
     initTournaments();
     initVerdicts();
     initBoard();
+    initProfile();
+    initReports();
+    initSimulator();
     initAuth();
     initPro();
   });

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NostraData Business — La prévision pour votre entreprise</title>
+<meta name="description" content="NostraData Business : votre plateforme de prévision interne, ou un tournoi soumis à nos prévisionnistes avec la dotation de votre choix.">
+<meta name="theme-color" content="#0B0B0B">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="demo-bar">Démo · les questions et les chiffres sont fictifs</div>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="200" height="44"></a>
+    <nav class="tabs" aria-label="Navigation principale">
+      <a class="tab" href="index.html">Aujourd'hui</a>
+      <a class="tab" href="questions.html">Questions</a>
+      <a class="tab" href="tournois.html">Tournois</a>
+      <a class="tab" href="verdicts.html">Verdicts</a>
+      <a class="tab" href="classement.html">Classement</a>
+    </nav>
+    <div class="header-right">
+      <span class="streak" id="streak" hidden></span>
+      <a class="btn btn--petit" id="auth-link" href="connexion.html">Connexion</a>
+    </div>
+  </div>
+  <div class="cats-bar">
+    <nav class="wrap cats" id="cats" aria-label="Catégories"><a class="cat t-politique" href="questions.html?theme=politique">Politique</a><a class="cat t-sport" href="questions.html?theme=sport">Sport</a><a class="cat t-culture" href="questions.html?theme=culture">Culture</a><a class="cat t-economie" href="questions.html?theme=economie">Économie</a><a class="cat t-sciences" href="questions.html?theme=sciences">Sciences</a></nav>
+  </div>
+</header>
+<main class="institut">
+<section class="inst-hero">
+  <div class="wrap stack">
+    <p class="kicker">NostraData Business</p>
+    <h1>La prévision, pour votre entreprise.</h1>
+    <p class="hero-lead">Déployez votre propre plateforme en interne, ou soumettez vos questions à nos prévisionnistes dans un tournoi doté.</p>
+    <div><a class="btn btn--blanc" data-contact="NostraData Business" href="#contact">Demander une démo</a></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">Deux façons de faire</p><h2 class="h2">En interne, ou avec nos prévisionnistes</h2></div>
+    </div>
+    <div class="grid grid--large">
+      <div class="offer"><p class="kicker">Plateforme interne</p><h3 class="h3">Votre NostraData, chez vous</h3><p>Vos questions, vos équipes, vos classements. Les réponses restent dans l'entreprise.</p><ul class="ticks"><li>Questions privées, des quatre types</li><li>Classement général et par équipe</li><li>Verdicts et indice de fiabilité internes</li></ul></div>
+      <div class="offer"><p class="kicker">Tournoi doté</p><h3 class="h3">Un tournoi sur NostraData</h3><p>Vous posez les questions, nos prévisionnistes répondent, vous fixez la dotation.</p><ul class="ticks"><li>Ouvert à tous, ou réservé à certains prévisionnistes</li><li>Votre nom affiché sur le tournoi, ou l'anonymat</li><li>Rémunération des répondants calculée automatiquement</li></ul></div>
+    </div>
+  </div>
+</section>
+<section class="section section--gris">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">Simulateur</p><h2 class="h2">Composez votre tournoi</h2><p class="muted">Fixez la dotation : la répartition se calcule toute seule. Rien n'est envoyé.</p></div>
+    </div>
+    <div class="sim">
+      <form class="sim-form fields" id="sim-form">
+        <div class="field">
+          <label for="sim-amount">Dotation, en euros</label>
+          <input id="sim-amount" name="amount" type="number" min="0" max="1000000" step="500" value="5000" inputmode="numeric">
+        </div>
+        <fieldset class="options">
+          <legend class="play-label">Qui est rémunéré ?</legend>
+          <label class="option"><input type="radio" name="mode" value="meilleur"><span>Le meilleur prévisionniste</span></label>
+          <label class="option"><input type="radio" name="mode" value="trois" checked><span>Les 3 meilleurs</span></label>
+          <label class="option"><input type="radio" name="mode" value="tous"><span>Tous les répondants</span></label>
+        </fieldset>
+        <div class="field" id="sim-n-field" hidden>
+          <label for="sim-n" id="sim-n-label">Répondants attendus</label>
+          <input class="slider" id="sim-n" name="n" type="range" min="50" max="2000" step="10" value="300">
+        </div>
+        <div class="field">
+          <label for="sim-audience">Qui peut répondre ?</label>
+          <select id="sim-audience" name="audience">
+            <option>Ouvert à tous les joueurs</option>
+            <option>Réservé aux Augures et aux Oracles</option>
+            <option>Réservé aux Oracles</option>
+            <option>Réservé aux meilleurs d'une catégorie</option>
+          </select>
+        </div>
+        <fieldset class="options">
+          <legend class="play-label">Votre nom sur le tournoi ?</legend>
+          <label class="option"><input type="radio" name="visible" value="oui" checked><span>Visible, avec votre profil d'entreprise</span></label>
+          <label class="option"><input type="radio" name="visible" value="non"><span>Anonyme</span></label>
+        </fieldset>
+        <div class="field" id="sim-name-field">
+          <label for="sim-name">Nom affiché</label>
+          <input id="sim-name" name="name" type="text" maxlength="40" placeholder="Votre entreprise" autocomplete="organization">
+        </div>
+      </form>
+      <div class="sim-out" id="sim-out" aria-live="polite"></div>
+    </div>
+    <p class="small muted">Répartition par défaut entre les 3 meilleurs : 50 %, 30 %, 20 %. Pour « tous les répondants », le montant est partagé au prorata de la justesse. Ces règles sont une proposition de démonstration.</p>
+  </div>
+</section>
+<section class="section" id="contact">
+  <div class="wrap stack">
+    <h2 class="h2">Parlons de votre projet</h2>
+    <div><a class="btn" data-contact="NostraData Business" href="#contact">Demander une démo</a></div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="145" height="32">
+    <nav class="footer-links" aria-label="Offres professionnelles">
+      <a href="intelligence.html">NostraData Intelligence</a>
+      <a href="business.html">NostraData Business</a>
+    </nav>
+    <p>Ni sondage, ni pari : aucune mise, des probabilités, des verdicts publiés.</p>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

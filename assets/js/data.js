@@ -68,9 +68,34 @@ window.ND = {
       text: "La mission décollera-t-elle à la date prévue ?",
       verdictLabel: "Verdict dans 4 jours", players: 890, rule: "Décollage constaté avant la fin de la fenêtre annoncée.",
       index: 24, sources: { joueurs: 30, marches: 19 } }
+,
+
+    { id: "part-electrique", type: "nombre", theme: "sciences", themeLabel: "Sciences", tournament: "mobilites-2030",
+      text: "Quelle part des voitures neuves vendues en France en 2027 sera électrique\u202f?",
+      verdictLabel: "Verdict en janvier 2028", players: 640, rule: "Immatriculations de l'année, selon les chiffres officiels du secteur.",
+      min: 10, max: 50, step: 1, unit: "%", index: 27, low: 23, high: 32 },
+
+    { id: "velo-travail", type: "binaire", theme: "sciences", themeLabel: "Sciences", tournament: "mobilites-2030",
+      text: "Le vélo dépassera-t-il 5\u202f% des trajets domicile-travail en 2027\u202f?",
+      verdictLabel: "Verdict à la publication de l'enquête annuelle", players: 512, rule: "Enquête nationale sur les déplacements, édition 2027.",
+      index: 34, sources: { joueurs: 39, marches: 29 } },
+
+    { id: "tarif-electricite", type: "binaire", theme: "economie", themeLabel: "Économie", tournament: "energie-2027",
+      text: "Le tarif réglementé de l'électricité baissera-t-il au 1er février 2027\u202f?",
+      verdictLabel: "Verdict le 1er février", players: 88, rule: "Tarif publié au Journal officiel.",
+      index: 57, sources: { joueurs: 61, marches: 53 } },
+
+    { id: "prix-megawattheure", type: "nombre", theme: "economie", themeLabel: "Économie", tournament: "energie-2027",
+      text: "Quel sera le prix moyen du mégawattheure sur le marché de gros au premier trimestre 2027\u202f?",
+      verdictLabel: "Verdict début avril", players: 74, rule: "Moyenne trimestrielle du marché de gros français.",
+      min: 30, max: 150, step: 5, unit: "€", index: 75, low: 60, high: 95 }
   ],
 
-  // Tournois : une série de questions, un classement dédié, un titre à gagner.
+  /* Tournois : une série de questions, un classement dédié, un titre ou une dotation à gagner.
+     Un tournoi d'entreprise (NostraData Business) ajoute :
+     - sponsor  : { name, visible, about }. Si « visible » est faux, l'entreprise reste anonyme.
+     - dotation : { amount, mode }. mode = "meilleur" (le premier), "trois" (les 3 premiers) ou "tous" (tous les répondants).
+     - audience : { label, titles }. Si « titles » est présent, seuls ces titres peuvent participer. */
   tournaments: [
     { id: "presidentielle-2027", name: "Présidentielle 2027", theme: "politique", status: "en-cours", statusLabel: "En cours",
       description: "Douze questions suivies jusqu'au soir du second tour. Le baromètre de la campagne, question par question.",
@@ -83,8 +108,25 @@ window.ND = {
     { id: "economie-2027", name: "Économie 2027", theme: "economie", status: "a-venir", statusLabel: "Ouvre en janvier",
       description: "Taux, inflation, emploi : dix questions pour toute l'année 2027.",
       total: 10, ends: "Jusqu'au 31 décembre 2027", players: 0, reward: "Titre « Boussole de l'année »",
-      leaderboard: [] }
+      leaderboard: [] },
+    { id: "mobilites-2030", name: "Mobilités 2030", theme: "sciences", status: "en-cours", statusLabel: "En cours",
+      description: "Voiture électrique, train, vélo : six questions sur la façon dont on se déplacera.",
+      total: 6, ends: "Jusqu'au 30 juin 2027", players: 870, reward: "5\u202f000\u00a0€ de dotation",
+      sponsor: { name: "Boréal Mobilités", visible: true, about: "Entreprise fictive, inventée pour la démonstration." },
+      dotation: { amount: 5000, mode: "trois" },
+      audience: { label: "Ouvert à tous les joueurs" },
+      leaderboard: [ { rank: 1, name: "LeVate", title: "Oracle", score: 83 }, { rank: 2, name: "Tirésias", title: "Devin", score: 80 }, { rank: 3, name: "Mox", title: "Augure", score: 78 }, { rank: 4, name: "Alea", title: "Devin", score: 74 }, { rank: 5, name: "Zénon", title: "Devin", score: 72 } ] },
+    { id: "energie-2027", name: "Prix de l'énergie 2027", theme: "economie", status: "en-cours", statusLabel: "En cours",
+      description: "Quatre questions sur les prix de l'électricité et du gaz en 2027.",
+      total: 4, ends: "Jusqu'au 31 mars 2027", players: 96, reward: "3\u202f000\u00a0€ de dotation",
+      sponsor: { name: "", visible: false, about: "" },
+      dotation: { amount: 3000, mode: "tous" },
+      audience: { label: "Réservé aux Augures et aux Oracles", titles: ["Augure", "Oracle"] },
+      leaderboard: [ { rank: 1, name: "Cassandre", title: "Oracle", score: 85 }, { rank: 2, name: "Sibylle_K", title: "Augure", score: 81 }, { rank: 3, name: "PeuOuProu", title: "Augure", score: 79 }, { rank: 4, name: "Pythie33", title: "Augure", score: 76 }, { rank: 5, name: "LeVate", title: "Oracle", score: 75 } ] }
   ],
+
+  // Répartition par défaut d'une dotation entre les 3 meilleurs (en %). À régler.
+  sharesTopThree: [50, 30, 20],
 
   // Verdicts déjà tombés. « said » est la probabilité annoncée pour « Oui ».
   verdicts: [
@@ -105,17 +147,27 @@ window.ND = {
     { said: 70, happened: 69 }, { said: 90, happened: 88 }
   ],
 
-  // Classement de la saison (indice de fiabilité sur 100).
+  /* Classement général de la saison (indice de fiabilité sur 100).
+     « resolved » = questions tranchées, « since » = date d'arrivée.
+     Les scores par catégorie, la calibration et l'historique des profils publics sont dérivés
+     de ces lignes par app.js, de façon fixe, uniquement pour la démonstration. */
   leaderboard: [
-    { rank: 1, name: "Cassandre", title: "Oracle", score: 84 },
-    { rank: 2, name: "LeVate", title: "Oracle", score: 81 },
-    { rank: 3, name: "Mox", title: "Augure", score: 79 },
-    { rank: 4, name: "PeuOuProu", title: "Augure", score: 77 },
-    { rank: 5, name: "Sibylle_K", title: "Augure", score: 76 },
-    { rank: 6, name: "Pythie33", title: "Augure", score: 75 },
-    { rank: 7, name: "Tirésias", title: "Devin", score: 73 },
-    { rank: 8, name: "LaBoussole", title: "Devin", score: 72 },
-    { rank: 9, name: "Zénon", title: "Devin", score: 71 },
-    { rank: 10, name: "Alea", title: "Devin", score: 70 }
+    { rank: 1, name: "Cassandre", title: "Oracle", score: 84, resolved: 162, since: "janvier 2026" },
+    { rank: 2, name: "LeVate", title: "Oracle", score: 81, resolved: 148, since: "février 2026" },
+    { rank: 3, name: "Mox", title: "Augure", score: 79, resolved: 97, since: "mars 2026" },
+    { rank: 4, name: "PeuOuProu", title: "Augure", score: 77, resolved: 121, since: "janvier 2026" },
+    { rank: 5, name: "Sibylle_K", title: "Augure", score: 76, resolved: 88, since: "avril 2026" },
+    { rank: 6, name: "Pythie33", title: "Augure", score: 75, resolved: 104, since: "mars 2026" },
+    { rank: 7, name: "Tirésias", title: "Devin", score: 73, resolved: 64, since: "mai 2026" },
+    { rank: 8, name: "LaBoussole", title: "Devin", score: 72, resolved: 59, since: "juin 2026" },
+    { rank: 9, name: "Zénon", title: "Devin", score: 71, resolved: 71, since: "avril 2026" },
+    { rank: 10, name: "Alea", title: "Devin", score: 70, resolved: 46, since: "juillet 2026" }
+  ],
+
+  // NostraData Intelligence : exemples de rapports (fictifs).
+  reports: [
+    { theme: "politique", themeLabel: "Politique", title: "Présidentielle 2027", rhythm: "Chaque mois, puis chaque semaine en avril", summary: "Participation, qualifiés, écarts entre marchés et opinion, et ce que disent les meilleurs prévisionnistes." },
+    { theme: "economie", themeLabel: "Économie", title: "Taux, inflation, énergie", rhythm: "Chaque mois", summary: "Les probabilités clés pour les décisions de budget et d'achat, avec leurs fourchettes." },
+    { theme: "sciences", themeLabel: "Sciences", title: "Mobilités et transition", rhythm: "Chaque trimestre", summary: "Les jalons à venir, datés et chiffrés, avec l'historique de fiabilité sur le thème." }
   ]
 };

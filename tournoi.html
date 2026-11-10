@@ -39,11 +39,14 @@
       <div class="hero-pills"><span class="pill">Tournoi</span><span class="pill pill--blanc" id="t-status"></span></div>
       <h1 id="t-name">Chargement du tournoi.</h1>
       <p class="hero-lead" id="t-desc"></p>
+      <p class="strong" id="t-sponsor" hidden></p>
       <div class="hero-meta" id="t-meta"></div>
     </div>
     <div class="play">
       <p class="play-label">À gagner</p>
       <p class="q" id="t-reward"></p>
+      <div class="rows" id="t-distribution" hidden></div>
+      <p class="small strong" id="t-audience"></p>
       <div class="progress" id="t-progress" aria-hidden="true"></div>
       <p class="small strong" id="t-progress-label"></p>
       <a class="btn btn--plein" id="t-join" href="connexion.html">Rejoindre le tournoi</a>
@@ -71,15 +74,22 @@
 <section class="pro" id="pro">
   <div class="wrap pro-row">
     <div>
-      <p class="kicker">Média ou marque ?</p>
-      <h2 class="h2">Un baromètre ou un tournoi à votre nom.</h2>
+      <p class="kicker">Pour les professionnels</p>
+      <h2 class="h2">Des rapports, ou votre propre plateforme.</h2>
     </div>
-    <a class="btn btn--blanc" id="pro-contact" href="#pro">Demander une démo</a>
+    <div class="pro-actions">
+      <a class="btn btn--blanc" href="intelligence.html">NostraData Intelligence</a>
+      <a class="btn btn--contour-blanc" href="business.html">NostraData Business</a>
+    </div>
   </div>
 </section>
 <footer class="site-footer">
   <div class="wrap footer-row">
     <img src="assets/img/logo-blanc.svg" alt="NostraData" width="145" height="32">
+    <nav class="footer-links" aria-label="Offres professionnelles">
+      <a href="intelligence.html">NostraData Intelligence</a>
+      <a href="business.html">NostraData Business</a>
+    </nav>
     <p>Ni sondage, ni pari : aucune mise, des probabilités, des verdicts publiés.</p>
   </div>
 </footer>

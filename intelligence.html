@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NostraData Intelligence — Rapports de prévision</title>
+<meta name="description" content="NostraData Intelligence : des rapports de prévision sur des thèmes précis, sur abonnement.">
+<meta name="theme-color" content="#0B0B0B">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="demo-bar">Démo · les questions et les chiffres sont fictifs</div>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="200" height="44"></a>
+    <nav class="tabs" aria-label="Navigation principale">
+      <a class="tab" href="index.html">Aujourd'hui</a>
+      <a class="tab" href="questions.html">Questions</a>
+      <a class="tab" href="tournois.html">Tournois</a>
+      <a class="tab" href="verdicts.html">Verdicts</a>
+      <a class="tab" href="classement.html">Classement</a>
+    </nav>
+    <div class="header-right">
+      <span class="streak" id="streak" hidden></span>
+      <a class="btn btn--petit" id="auth-link" href="connexion.html">Connexion</a>
+    </div>
+  </div>
+  <div class="cats-bar">
+    <nav class="wrap cats" id="cats" aria-label="Catégories"><a class="cat t-politique" href="questions.html?theme=politique">Politique</a><a class="cat t-sport" href="questions.html?theme=sport">Sport</a><a class="cat t-culture" href="questions.html?theme=culture">Culture</a><a class="cat t-economie" href="questions.html?theme=economie">Économie</a><a class="cat t-sciences" href="questions.html?theme=sciences">Sciences</a></nav>
+  </div>
+</header>
+<main class="institut">
+<section class="inst-hero">
+  <div class="wrap stack">
+    <p class="kicker">NostraData Intelligence</p>
+    <h1>Des rapports de prévision, thème par thème.</h1>
+    <p class="hero-lead">Sur un sujet précis, ce que disent les marchés, les joueurs et les meilleurs prévisionnistes. Sur abonnement.</p>
+    <div><a class="btn btn--blanc" data-contact="NostraData Intelligence" href="#contact">Demander une démo</a></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">Dans chaque rapport</p><h2 class="h2">Quatre choses, toujours les mêmes</h2></div>
+    </div>
+    <div class="grid">
+      <div class="offer"><p class="kicker">1</p><h3 class="h3">Les probabilités clés</h3><p>Les questions qui comptent sur le thème, leur probabilité et leur fourchette.</p></div>
+      <div class="offer"><p class="kicker">2</p><h3 class="h3">Leur évolution</h3><p>Ce qui a bougé depuis le rapport précédent, et pourquoi.</p></div>
+      <div class="offer"><p class="kicker">3</p><h3 class="h3">Les écarts</h3><p>Là où les marchés et l'opinion ne sont pas d'accord.</p></div>
+      <div class="offer"><p class="kicker">4</p><h3 class="h3">Le bilan</h3><p>Ce qu'on avait annoncé, ce qui est arrivé, ratés compris.</p></div>
+    </div>
+  </div>
+</section>
+<section class="section section--gris">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">Exemples de thèmes</p><h2 class="h2">Un rapport par thème</h2><p class="muted">Exemples fictifs, pour la démonstration.</p></div>
+    </div>
+    <div class="grid grid--large" data-reports></div>
+  </div>
+</section>
+<section class="section" id="contact">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">L'abonnement</p><h2 class="h2">Un thème, ou tous les thèmes</h2></div>
+    </div>
+    <div class="grid grid--large">
+      <div class="offer"><p class="kicker">Formule</p><h3 class="h3">Un thème</h3><p>Les rapports d'un seul thème, pour une équipe.</p><ul class="ticks"><li>Tous les rapports du thème</li><li>L'historique de fiabilité</li><li>Les alertes entre deux rapports</li></ul></div>
+      <div class="offer"><p class="kicker">Formule</p><h3 class="h3">Tous les thèmes</h3><p>L'ensemble des rapports, pour toute l'entreprise.</p><ul class="ticks"><li>Tous les thèmes publiés</li><li>Les données en téléchargement</li><li>Un thème sur mesure par an</li></ul></div>
+    </div>
+    <p class="muted">Tarifs communiqués sur demande.</p>
+    <div><a class="btn" data-contact="NostraData Intelligence" href="#contact">Demander une démo</a></div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="145" height="32">
+    <nav class="footer-links" aria-label="Offres professionnelles">
+      <a href="intelligence.html">NostraData Intelligence</a>
+      <a href="business.html">NostraData Business</a>
+    </nav>
+    <p>Ni sondage, ni pari : aucune mise, des probabilités, des verdicts publiés.</p>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

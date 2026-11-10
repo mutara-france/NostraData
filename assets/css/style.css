@@ -178,7 +178,7 @@ a { color: inherit; }
 .podium { display: flex; align-items: flex-end; gap: 10px; width: 100%; max-width: 420px; align-self: center; }
 .podium > div { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .podium .face { width: 54px; height: 54px; }
-.podium .name { font-size: 16px; line-height: 22px; font-weight: 600; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.podium .name { text-decoration: none; font-size: 16px; line-height: 22px; font-weight: 600; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .podium .plinth { width: 100%; border-radius: 14px 14px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .podium .plinth .num { font-size: 34px; }
 .podium .plinth span:last-child { font-size: 16px; line-height: 20px; font-weight: 600; }
@@ -188,7 +188,8 @@ a { color: inherit; }
 .rank-list li.me { background: var(--bleu-clair); }
 .rank-list .rank { flex: 0 0 38px; font-weight: 600; font-size: 17px; }
 .rank-list .who { flex: 1 1 0; min-width: 0; }
-.rank-list .who .name { font-weight: 600; font-size: 17px; line-height: 24px; }
+.rank-list .who .name { font-weight: 600; font-size: 17px; line-height: 24px; text-decoration: none; }
+.rank-list .who .name:hover, .podium a.name:hover { text-decoration: underline; }
 .rank-list .who .title { font-size: 16px; line-height: 22px; color: var(--gris-600); }
 .rank-list .score { font-weight: 600; font-size: 19px; }
 .defi { flex: 1 1 300px; min-width: 0; background: var(--orange); border-radius: 28px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
@@ -286,6 +287,58 @@ a { color: inherit; }
 .field input:hover { border-color: var(--encre); }
 .field input:focus-visible { outline: 3px solid var(--bleu); outline-offset: 2px; border-color: var(--encre); }
 .demo-note { background: var(--gris-50); border-radius: 14px; padding: 12px 16px; }
+
+/* Classement par catégorie : filtres colorés */
+.filter[class*="t-"] { border-color: var(--theme); }
+.filter[class*="t-"][aria-pressed="true"] { background: var(--theme); border-color: var(--theme); color: var(--theme-texte); }
+
+/* Profil public */
+.pill--gris { background: var(--gris-50); color: var(--encre); }
+.profile-head { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 28px; }
+.profile-face { flex: 0 0 auto; width: 104px; height: 104px; }
+@media (min-width: 900px) { .profile-face { width: 132px; height: 132px; } }
+.profile-id { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.profile-id .h2 { overflow-wrap: anywhere; }
+.profile-actions { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.tiles { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.tile { background: var(--gris-50); border-radius: var(--rayon); padding: 20px 22px; display: flex; flex-direction: column; gap: 6px; }
+.tile .num { font-size: 52px; }
+.profile-calib { flex: 1 1 300px; max-width: 420px; display: flex; }
+.profile-calib .calib { flex: 1 1 auto; }
+.cat-rows { display: flex; flex-direction: column; gap: 16px; }
+.cat-row { display: flex; flex-direction: column; gap: 8px; }
+.cat-top { display: flex; align-items: center; gap: 12px; }
+.cat-top .score { margin-left: auto; font-weight: 600; font-size: 22px; }
+.cat-row .bar-track { background: var(--blanc); }
+.cat-row .bar-fill { background: var(--theme); }
+.tour-rows { display: flex; flex-direction: column; gap: 10px; max-width: 760px; }
+.tour-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; text-decoration: none; border: 1px solid var(--gris-200); border-radius: 16px; padding: 12px 16px; }
+.tour-row:hover { border-color: var(--encre); }
+.tour-row .muted { margin-left: auto; }
+
+/* Offres professionnelles (registre institut : noir, blanc, un seul bleu) */
+.pro-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn--contour-blanc { background: transparent; color: var(--blanc); border-color: var(--blanc); }
+.footer-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.footer-links a { color: var(--blanc); font-weight: 600; text-decoration: none; }
+.footer-links a:hover { text-decoration: underline; }
+.inst-hero { background: var(--encre); color: var(--blanc); padding: 48px 0; }
+@media (min-width: 900px) { .inst-hero { padding: 88px 0; } }
+.inst-hero .kicker { color: var(--gris-sombre); }
+.inst-hero h1 { font-size: 36px; line-height: 1.06; font-weight: 500; letter-spacing: -0.03em; max-width: 900px; }
+@media (min-width: 900px) { .inst-hero h1 { font-size: 64px; } }
+.offer { border: 1px solid var(--gris-200); border-radius: var(--rayon); padding: 24px; display: flex; flex-direction: column; gap: 12px; background: var(--blanc); }
+.institut .ticks li::before { background: var(--bleu); }
+.sim { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.sim-form { flex: 1 1 340px; min-width: 0; background: var(--blanc); border-radius: 28px; padding: 24px; }
+.sim-out { flex: 1 1 320px; min-width: 0; background: var(--encre); color: var(--blanc); border-radius: 28px; padding: 28px; display: flex; flex-direction: column; gap: 12px; position: sticky; top: 16px; }
+.sim-out .kicker { color: var(--gris-sombre); }
+.sim-amount { font-size: 64px; }
+.rows--sombre > div { border-top-color: #3A3A39; }
+.rows--sombre > div > span:first-child { color: var(--gris-sombre); }
+.field select { font: inherit; font-size: 18px; line-height: 26px; padding: 12px 16px; border: 1.5px solid var(--gris-200); border-radius: 14px; background: var(--blanc); color: var(--encre); width: 100%; }
+.field select:hover { border-color: var(--encre); }
+.btn[aria-disabled="true"]:hover { transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classement — NostraData</title>
+<meta name="description" content="Le classement des meilleurs prévisionnistes de NostraData : la justesse dans la durée, pas la chance.">
+<meta name="theme-color" content="#0B0B0B">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="demo-bar">Démo · les questions et les chiffres sont fictifs</div>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="136" height="30"></a>
+    <div class="header-right">
+      <span class="streak" id="streak" hidden></span>
+      <a class="btn btn--contour btn--petit" href="index.html#pro">Espace pro</a>
+    </div>
+    <nav class="tabs" aria-label="Navigation principale">
+      <a class="tab" href="index.html">Aujourd'hui</a>
+      <a class="tab" href="verdicts.html">Verdicts</a>
+      <a class="tab is-active" href="classement.html" aria-current="page">Classement</a>
+    </nav>
+  </div>
+</header>
+<main>
+<section class="section">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">Classement de la saison</p><h1 class="h2">Mesure-toi aux meilleurs</h1><p class="muted">Indice de fiabilité sur 100. On note la justesse dans la durée, pas la chance.</p></div>
+    </div>
+    <div class="duo-cols">
+    <div class="board">
+      <div class="podium" id="podium"></div>
+      <ol class="rank-list" id="rank-list" data-limit="10"></ol>
+    </div>
+    <aside class="defi">
+      <div class="defi-top"><img src="assets/img/logo.svg" alt="" width="100" height="22"><span class="pill">Défi</span></div>
+      <h3>Moi, je dis 40 %. Et toi ?</h3>
+      <p>Ton ami répond sans créer de compte. Au verdict, vous voyez qui avait raison.</p>
+      <div class="spacer"></div>
+      <a class="btn btn--plein" href="index.html">Jouer puis défier un ami</a>
+    </aside>
+    </div>
+  </div>
+</section>
+<section class="section section--gris">
+  <div class="wrap stack">
+    <h2 class="h2">Les règles du jeu</h2>
+    <div class="grid">
+      <div class="step step--1"><span class="face" data-face="70,confiant"></span><div><h3>La justesse</h3><p>Dire 70 % et avoir raison 7 fois sur 10.</p></div></div>
+      <div class="step step--2"><span class="face" data-face="50,partage"></span><div><h3>Avant l'indice</h3><p>Tu réponds avant de voir le chiffre des autres.</p></div></div>
+      <div class="step step--3"><span class="face" data-face="100,sur"></span><div><h3>Dans la durée</h3><p>Trente questions tranchées pour être classé.</p></div></div>
+    </div>
+  </div>
+</section>
+</main>
+<section class="pro" id="pro">
+  <div class="wrap pro-row">
+    <div>
+      <p class="kicker">Média ou marque ?</p>
+      <h2 class="h2">Un baromètre à votre nom.</h2>
+    </div>
+    <a class="btn btn--blanc" id="pro-contact" href="#pro">Demander une démo</a>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="109" height="24">
+    <p>Ni sondage, ni pari : aucune mise, des probabilités, des verdicts publiés.</p>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

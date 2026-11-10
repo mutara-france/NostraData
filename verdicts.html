@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verdicts — NostraData</title>
+<meta name="description" content="Le carnet de notes de NostraData : ce qu'on avait annoncé, ce qui est arrivé, ratés compris.">
+<meta name="theme-color" content="#0B0B0B">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="demo-bar">Démo · les questions et les chiffres sont fictifs</div>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="136" height="30"></a>
+    <div class="header-right">
+      <span class="streak" id="streak" hidden></span>
+      <a class="btn btn--contour btn--petit" href="index.html#pro">Espace pro</a>
+    </div>
+    <nav class="tabs" aria-label="Navigation principale">
+      <a class="tab" href="index.html">Aujourd'hui</a>
+      <a class="tab is-active" href="verdicts.html" aria-current="page">Verdicts</a>
+      <a class="tab" href="classement.html">Classement</a>
+    </nav>
+  </div>
+</header>
+<main>
+<section class="section">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">Verdicts</p><h1 class="h2">Ce qu'on avait dit, ce qui est arrivé</h1><p class="muted" id="verdicts-summary"></p></div>
+    </div>
+    <div class="filters" id="verdicts-filters" role="group" aria-label="Filtrer par thème"></div>
+    <div class="grid" id="verdicts-list"></div>
+  </div>
+</section>
+<section class="section section--gris">
+  <div class="wrap duo-cols" style="align-items: center">
+    <div style="flex: 1 1 320px; max-width: 420px" id="verdicts-calib"></div>
+    <div class="stack" style="flex: 1.4 1 320px; gap: 14px">
+      <h2 class="h2">Un oracle qui se note</h2>
+      <p>Chaque question a une règle écrite à l'avance : la source, la date, le seuil. À l'échéance, la carte se retourne et le résultat s'ajoute au carnet de notes, qu'on ait vu juste ou non.</p>
+      <p class="muted">Vu juste : l'indice donnait plus d'une chance sur deux à ce qui est arrivé.</p>
+      <div><a class="btn" href="index.html">Jouer la question du jour</a></div>
+    </div>
+  </div>
+</section>
+</main>
+<section class="pro" id="pro">
+  <div class="wrap pro-row">
+    <div>
+      <p class="kicker">Média ou marque ?</p>
+      <h2 class="h2">Un baromètre à votre nom.</h2>
+    </div>
+    <a class="btn btn--blanc" id="pro-contact" href="#pro">Demander une démo</a>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="109" height="24">
+    <p>Ni sondage, ni pari : aucune mise, des probabilités, des verdicts publiés.</p>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

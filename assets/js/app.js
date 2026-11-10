@@ -207,7 +207,8 @@
     return html + '<p class="small">' + esc(q.verdictLabel) + ". " + esc(q.rule) + "</p>" +
       '<button class="btn btn--plein" type="button" id="share">Défier un ami</button>' +
       '<p class="small muted share-status" id="share-status" role="status"></p>' +
-      '<button class="link-btn small" type="button" id="replay">Modifier ma réponse</button>';
+      '<button class="btn btn--contour btn--plein" type="button" id="replay">Mettre à jour mon pronostic</button>' +
+      (ans.h && ans.h.length > 1 ? '<p class="small muted">' + ans.h.length + " pronostics enregistrés sur cette question.</p>" : "");
   }
 
   function initPlay() {
@@ -264,12 +265,12 @@
       form.hidden = true;
       reveal.hidden = false;
       $("replay").addEventListener("click", function () {
-        var data = readStore();
-        if (data.answers) { delete data.answers[q.id]; writeStore(data); }
         reveal.hidden = true;
         form.hidden = false;
+        form.querySelector("button[type=submit]").textContent = "Enregistrer la mise à jour";
         slider.focus();
       });
+      document.dispatchEvent(new CustomEvent("nd:answer", { detail: { q: q, answer: ans } }));
       $("share").addEventListener("click", function () {
         var said = q.type === "binaire" ? pct(ans.v) : q.type === "choix" ? q.options[ans.o].label : fmt(q, ans.v);
         var link = new URL("question.html", window.location.href);
@@ -293,10 +294,13 @@
 
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
-      var ans = { v: parseFloat(slider.value) };
+      var ans = { v: parseFloat(slider.value), t: Date.now() };
       if (q.type === "choix") { ans.o = parseInt(form.elements.opt.value, 10); }
       var data = readStore();
       data.answers = data.answers || {};
+      var prev = data.answers[q.id];
+      if (typeof prev === "number") { prev = { v: prev }; }
+      ans.h = (prev && prev.h ? prev.h : prev ? [{ v: prev.v, o: prev.o, t: prev.t || ans.t }] : []).concat([{ v: ans.v, o: ans.o, t: ans.t }]);
       data.answers[q.id] = ans;
       writeStore(data);
       show(ans);
@@ -306,8 +310,10 @@
 
     var saved = (readStore().answers || {})[q.id];
     if (typeof saved === "number") { saved = { v: saved }; }   // ancien format
+    document.dispatchEvent(new CustomEvent("nd:question", { detail: { q: q, today: isToday } }));
     if (saved && (q.type !== "choix" || q.options[saved.o])) {
       slider.value = saved.v;
+      if (q.type === "choix") { form.elements.opt[saved.o].checked = true; }
       draw();
       show(saved);
     }
@@ -578,13 +584,17 @@
 
     if (!p) {   // le profil du joueur connecté : pas encore de verdict
       var answers = readStore().answers || {}, ids = Object.keys(answers).filter(findQuestion), joined = readStore().tournaments || [];
+      var cal = readStore().calibration, follows = Object.keys(readStore().follows || {}).filter(findQuestion);
       document.title = u.pseudo + " — Profil NostraData";
       root.innerHTML = '<section class="section"><div class="wrap stack">' + profileHead(u.pseudo, "Curieux", "", face(Math.min(1, ids.length / ND.minResolved), "partage"), true) +
         '<div class="tiles">' + tile("Indice de fiabilité", "–", "Après " + ND.minResolved + " questions tranchées") + tile("Réponses en attente", String(ids.length), "Le verdict n'est pas encore tombé") +
-        tile("Tournois rejoints", String(joined.length), "Voir les tournois ouverts") + "</div>" +
+        tile("Tournois rejoints", String(joined.length), "Voir les tournois ouverts") +
+        tile("Test de calibration", cal ? String(cal.score) : "–", cal ? cal.profile : "Dix affirmations, trois minutes") + "</div>" +
+        (cal ? "" : '<div><a class="btn btn--contour" href="calibration.html">Passer le test de calibration</a></div>') +
         '<div class="rule-box"><p class="q">Ce profil est public.</p><p>Il affichera ton indice de fiabilité, ta calibration et tes verdicts dès que tes premières questions seront tranchées.</p></div>' +
         (ids.length ? '<h2 class="h3">Tes réponses en attente</h2><div class="grid">' + ids.map(function (id) { return questionCard(findQuestion(id)); }).join("") + "</div>"
-          : '<div><a class="btn" href="index.html">Jouer la question du jour</a></div>') + "</div></section>";
+          : '<div><a class="btn" href="index.html">Jouer la question du jour</a></div>') +
+        (follows.length ? '<h2 class="h3">Tes questions suivies</h2><div class="grid">' + follows.map(function (id) { return questionCard(findQuestion(id)); }).join("") + "</div>" : "") + "</div></section>";
       wireShare(u.pseudo);
       return;
     }
@@ -610,7 +620,8 @@
     root.innerHTML = '<section class="section"><div class="wrap stack">' +
       profileHead(p.name, p.title, p.since, face(p.score / 100, p.score >= 80 ? "sur" : "confiant"), false) +
       '<div class="tiles">' + tile("Indice de fiabilité", String(p.score), "sur 100") + tile("Rang général", ordinal(p.rank), "sur " + ND.leaderboard.length + " classés") +
-      tile("Questions tranchées", String(p.resolved), "depuis " + p.since) + tile("Vu juste", pct(right), "du bon côté de 50" + NNBSP + "%") + "</div>" +
+      tile("Questions tranchées", String(p.resolved), "depuis " + p.since) + tile("Vu juste", pct(right), "du bon côté de 50" + NNBSP + "%") +
+      tile("Face aux autres", "+" + Math.max(1, Math.round((p.score - 62) * 0.8)), "points par question, en moyenne") + "</div>" +
       '<div class="duo-cols"><div class="profile-calib">' + calibCard(calib, "Quand " + esc(p.name) + " dit 70" + NNBSP + "%, ça arrive " + Math.round(at70 / 10) + " fois sur 10.", p.resolved + " questions tranchées, ratés compris.") + "</div>" +
       '<div class="board"><h2 class="h3">Par catégorie</h2><div class="cat-rows">' + cats + "</div></div></div></div></section>" +
       '<section class="section section--gris"><div class="wrap stack"><div class="section-head"><div><p class="kicker">Historique</p><h2 class="h2">Ses derniers verdicts</h2></div></div><div class="grid">' + cards + "</div></div></section>" +
@@ -653,7 +664,7 @@
   // ---------- Connexion (démo : rien n'est envoyé, le mot de passe n'est ni vérifié ni gardé) ----------
   function safeReturn() {
     var back = param("retour") || "";
-    return /^[a-z-]+\.html(\?[\w=&-]*)?$/.test(back) ? back : "index.html";
+    return /^[a-z-]+\.html(\?[\w=&-]*)?$/.test(back) ? back : null;
   }
   function initAuth() {
     var form = $("auth-form");
@@ -686,7 +697,7 @@
       var data = readStore();
       data.user = { pseudo: name };          // on ne garde que le pseudonyme : ni e-mail, ni mot de passe
       writeStore(data);
-      window.location.href = safeReturn();
+      window.location.href = safeReturn() || (mode === "inscription" ? "calibration.html" : "index.html");
     });
     $("logout").addEventListener("click", function () {
       var data = readStore();
@@ -708,6 +719,12 @@
       }
     });
   }
+
+  // Outils partagés avec expert.js (analyse des questions, tableau, calibration, widget).
+  window.NDApp = { $: $, pct: pct, esc: esc, typo: typo, param: param, readStore: readStore, writeStore: writeStore, user: user,
+    findQuestion: findQuestion, findTournament: findTournament, fmt: fmt, range: range, topOption: topOption, summary: summary,
+    face: face, moodFor: moodFor, count: count, clamp: clamp, hash: hash, row: row, themeLabel: themeLabel, profileLink: profileLink,
+    TYPES: TYPES, THEMES: THEMES, NNBSP: NNBSP };
 
   document.addEventListener("DOMContentLoaded", function () {
     fillFaces();

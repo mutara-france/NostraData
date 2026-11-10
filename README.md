@@ -12,7 +12,7 @@ Ce dépôt contient la première version du site : une **démo statique**, sans 
 | --- | --- | --- |
 | Aujourd'hui | `index.html` | La question du jour jouable, les trois temps du jeu, un aperçu des questions, des tournois et des verdicts |
 | Questions | `questions.html` | Toutes les questions ouvertes, filtrées par catégorie (barre du haut) et par type |
-| Une question | `question.html?id=…` | Le pronostic, la révélation de l'indice et la règle du verdict |
+| Une question | `question.html?id=…` | Le pronostic et sa mise à jour, la courbe de l'indice, les voix, la répartition des pronostics, les arguments, le suivi, l'export et le widget |
 | Tournois | `tournois.html` | La liste des tournois |
 | Un tournoi | `tournoi.html?id=…` | Ses questions, son classement, le bouton pour le rejoindre |
 | Verdicts | `verdicts.html` | Le carnet de notes : ce qu'on avait dit, ce qui est arrivé |
@@ -21,6 +21,9 @@ Ce dépôt contient la première version du site : une **démo statique**, sans 
 | Intelligence | `intelligence.html` | NostraData Intelligence : les rapports par thème, sur abonnement |
 | Business | `business.html` | NostraData Business : la plateforme interne, les tournois dotés et le simulateur de dotation |
 | Connexion | `connexion.html` | Connexion et création de compte (démo) |
+| Calibration | `calibration.html` | Le test de calibration en dix affirmations (réponses réelles) |
+| Méthode | `methode.html` | Comment l'indice est calculé, comment un pronostic est noté, comment une question est tranchée |
+| Widget | `widget.html?id=…` | La carte à intégrer dans un article, par `<iframe>` |
 
 ### Quatre types de questions
 
@@ -44,6 +47,20 @@ Ce dépôt contient la première version du site : une **démo statique**, sans 
 - la connexion **en mode démo** : rien n'est envoyé, l'e-mail et le mot de passe ne sont ni vérifiés ni enregistrés, seul le pseudonyme est gardé dans le navigateur.
 
 Tout l'état du joueur (pronostics, pseudonyme, tournois rejoints) est dans le `localStorage` du navigateur. Rien n'est envoyé à un serveur.
+
+### L'outil d'analyse
+
+- **Mise à jour du pronostic** : chaque version est gardée avec sa date, et apparaît sur la courbe.
+- **Courbe de l'indice** sur 7, 30 ou 60 jours, avec la fourchette pour les chiffres et les dates.
+- **Les voix** : marchés, joueurs, Cercle, IA, puis l'indice.
+- **Répartition des pronostics** des joueurs.
+- **Arguments** : un raisonnement écrit, placé au-dessus ou en dessous de l'indice, et un vote « Convaincant ».
+- **Suivi** : trois alertes réglables par question (verdict, mouvement, clôture). L'envoi demandera un serveur.
+- **Export CSV** de la courbe et **code du widget** à copier.
+- **Vue tableau** des questions, avec recherche et tri.
+- **Proposer une question**, gardée dans le navigateur en attendant la modération.
+
+Dans la démo, les courbes, les répartitions et les voix « Cercle » et « IA » sont dérivées des données par un calcul fixe dans `expert.js`. Seul le test de calibration repose sur des faits réels. La page Méthode décrit la méthode visée (score de Brier, comparaison aux autres joueurs, pondération par la fiabilité) : elle reste à implémenter côté serveur.
 
 ### Les règles de dotation (proposition de démonstration)
 
@@ -87,10 +104,12 @@ tournois.html, tournoi.html                  les tournois
 verdicts.html, classement.html               le carnet de notes et le classement
 profil.html                                  le profil public d'un joueur
 intelligence.html, business.html             les offres professionnelles
+calibration.html, methode.html, widget.html  le test de calibration, la méthode, le widget
 connexion.html                               la connexion (démo)
 assets/css/style.css                         la charte (couleurs, typographie, composants)
 assets/js/data.js                            les données de démonstration et les réglages
-assets/js/app.js                             l'anneau vivant, le jeu, les tournois, la connexion
+assets/js/app.js                             l'anneau vivant, le jeu, les tournois, les profils, la connexion
+assets/js/expert.js                          l'outil d'analyse, le tableau, la calibration, le widget
 assets/img/                                  le logo et le favicon
 assets/fonts/                                la police Inter, hébergée sur place
 ```

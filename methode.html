@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Méthode — NostraData</title>
+<meta name="description" content="Comment NostraData calcule son indice, note les prévisionnistes et tranche les questions.">
+<meta name="theme-color" content="#0B0B0B">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="NostraData, accueil"><img src="assets/img/logo.svg" alt="NostraData" width="200" height="44"></a>
+    <nav class="tabs" aria-label="Navigation principale">
+      <a class="tab" href="index.html">Aujourd'hui</a>
+      <a class="tab" href="questions.html">Questions</a>
+      <a class="tab" href="tournois.html">Tournois</a>
+      <a class="tab" href="verdicts.html">Verdicts</a>
+      <a class="tab" href="classement.html">Classement</a>
+    </nav>
+    <div class="header-right">
+      <span class="streak" id="streak" hidden></span>
+      <a class="btn btn--petit" id="auth-link" href="connexion.html">Connexion</a>
+    </div>
+  </div>
+  <div class="cats-bar">
+    <nav class="wrap cats" id="cats" aria-label="Catégories"><a class="cat t-politique" href="questions.html?theme=politique">Politique</a><a class="cat t-sport" href="questions.html?theme=sport">Sport</a><a class="cat t-culture" href="questions.html?theme=culture">Culture</a><a class="cat t-economie" href="questions.html?theme=economie">Économie</a><a class="cat t-sciences" href="questions.html?theme=sciences">Sciences</a></nav>
+  </div>
+</header>
+<main class="institut">
+<section class="inst-hero">
+  <div class="wrap stack">
+    <p class="kicker">Méthode</p>
+    <h1>Comment on calcule, comment on note, comment on tranche.</h1>
+    <p class="hero-lead">Un chiffre n'a de valeur que si l'on sait d'où il vient et s'il a été vérifié après coup.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">L'indice</p><h2 class="h2">Quatre voix, pondérées par leur fiabilité</h2></div>
+    </div>
+    <div class="grid">
+      <div class="offer"><p class="kicker">Voix 1</p><h3 class="h3">Les marchés</h3><p>Le prix des marchés prédictifs, quand il en existe un sur le sujet.</p></div>
+      <div class="offer"><p class="kicker">Voix 2</p><h3 class="h3">Les joueurs</h3><p>La médiane des pronostics de tous les joueurs.</p></div>
+      <div class="offer"><p class="kicker">Voix 3</p><h3 class="h3">Le Cercle</h3><p>Les prévisionnistes les mieux classés sur le thème.</p></div>
+      <div class="offer"><p class="kicker">Voix 4</p><h3 class="h3">L'IA</h3><p>Un modèle qui répond aux mêmes questions, noté comme un joueur.</p></div>
+    </div>
+    <p>L'indice NostraData combine ces voix. Chacune pèse selon sa fiabilité passée sur le thème : une voix qui s'est souvent trompée compte moins. Pour un chiffre ou une date, l'indice est une médiane accompagnée d'une fourchette qui doit contenir la réponse 8 fois sur 10.</p>
+  </div>
+</section>
+<section class="section section--gris">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">La note</p><h2 class="h2">Comment un pronostic est noté</h2></div>
+    </div>
+    <div class="grid grid--large">
+      <div class="offer"><p class="kicker">Étape 1</p><h3 class="h3">Face au résultat</h3><p>Au verdict, on mesure l'écart entre ta probabilité et ce qui est arrivé, avec une règle de score quadratique (score de Brier).</p><ul class="ticks"><li>Sûr et juste : beaucoup de points</li><li>Sûr et faux : une lourde perte</li><li>Répondre 50{NN}% ne rapporte et ne coûte presque rien</li></ul></div>
+      <div class="offer"><p class="kicker">Étape 2</p><h3 class="h3">Face aux autres</h3><p>Ton score est comparé à celui des autres joueurs sur la même question.</p><ul class="ticks"><li>Faire mieux que la moyenne rapporte</li><li>Les questions difficiles ne pénalisent personne</li><li>Recopier l'indice ne rapporte rien</li></ul></div>
+      <div class="offer"><p class="kicker">Étape 3</p><h3 class="h3">L'indice de fiabilité</h3><p>Sur 100, il résume ta justesse et ta calibration sur toutes tes questions tranchées.</p><ul class="ticks"><li>Trente questions tranchées pour être classé</li><li>Un indice général et un par catégorie</li><li>Public sur ton profil</li></ul></div>
+    </div>
+    <p>Tu peux mettre à jour ton pronostic autant de fois que tu veux avant la clôture. Chaque version compte pour la période où elle était en vigueur : changer d'avis au bon moment est récompensé.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">La calibration</p><h2 class="h2">Dire 70 %, et avoir raison 7 fois sur 10</h2></div>
+    </div>
+    <p>Un bon prévisionniste n'est pas celui qui a toujours raison, mais celui dont la confiance est juste. On regroupe tes pronostics par niveau de confiance, et on regarde combien de fois l'événement est arrivé. NostraData s'applique la même règle : son carnet de notes est public, ratés compris.</p>
+    <div><a class="btn" href="calibration.html">Passer le test de calibration</a></div>
+  </div>
+</section>
+<section class="section section--gris">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">Les verdicts</p><h2 class="h2">Une règle écrite avant, jamais après</h2></div>
+    </div>
+    <div class="grid grid--large">
+      <div class="offer"><p class="kicker">Avant</p><h3 class="h3">À l'ouverture</h3><p>Chaque question précise sa source, sa date et son seuil. La règle ne change plus ensuite.</p></div>
+      <div class="offer"><p class="kicker">Pendant</p><h3 class="h3">Jusqu'à la clôture</h3><p>Les pronostics sont ouverts et modifiables. À la clôture, plus rien ne bouge.</p></div>
+      <div class="offer"><p class="kicker">Après</p><h3 class="h3">Au verdict</h3><p>Le résultat est publié avec sa source. Si la source manque ou se contredit, la question est annulée et ne compte pour personne.</p></div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap stack">
+    <div class="section-head">
+      <div><p class="kicker">Les limites</p><h2 class="h2">Ce que l'indice n'est pas</h2></div>
+    </div>
+    <ul class="ticks">
+      <li>Ce n'est pas un sondage : il ne mesure pas des intentions, il estime une probabilité.</li>
+      <li>Ce n'est pas un pari : il n'y a aucune mise, et aucun lien vers un site de paris.</li>
+      <li>Ce n'est pas une certitude : 80 % veut dire que l'événement n'arrive pas une fois sur cinq.</li>
+      <li>Ce n'est pas un conseil financier ou juridique.</li>
+    </ul>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <img src="assets/img/logo-blanc.svg" alt="NostraData" width="145" height="32">
+    <nav class="footer-links" aria-label="Offres professionnelles">
+      <a href="intelligence.html">NostraData Intelligence</a>
+      <a href="business.html">NostraData Business</a>
+      <a href="methode.html">Méthode</a>
+    </nav>
+    <p>Ni sondage, ni pari : aucune mise, des probabilités, des verdicts publiés.</p>
+    <p class="footer-note">Version de présentation · contenus d'exemple</p>
+  </div>
+</footer>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/expert.js"></script>
+</body>
+</html>

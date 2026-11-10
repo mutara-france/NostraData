@@ -164,6 +164,42 @@ window.ND = {
     { rank: 10, name: "Alea", title: "Devin", score: 70, resolved: 46, since: "juillet 2026" }
   ],
 
+  /* Arguments écrits sous les questions (exemples). « side » : "haut" = au-dessus de l'indice, "bas" = en dessous.
+     Les questions sans entrée ici reçoivent deux arguments génériques (voir expert.js). */
+  args: {
+    "film-week-end": [
+      { by: "Sibylle_K", side: "haut", votes: 41, text: "Sortie pendant les vacances scolaires, peu de concurrence directe et de bonnes premières séances : je monte à 75\u202f%." },
+      { by: "Zénon", side: "bas", votes: 23, text: "Les suites font rarement mieux que l'original en deuxième semaine, et la météo annoncée est belle. Je reste sous 50\u202f%." }
+    ],
+    "participation-75": [
+      { by: "Cassandre", side: "bas", votes: 58, text: "La participation recule à presque chaque scrutin depuis vingt ans. Les marchés surestiment l'effet d'une campagne serrée." },
+      { by: "Pythie33", side: "haut", votes: 37, text: "Une élection sans sortant mobilise davantage. Le seuil de 75\u202f% a déjà été franchi dans cette configuration." }
+    ],
+    "livret-a": [
+      { by: "LaBoussole", side: "bas", votes: 29, text: "La formule de calcul suit l'inflation et les taux courts, tous deux orientés à la baisse. Je vise 1,25\u202f%." },
+      { by: "PeuOuProu", side: "haut", votes: 18, text: "Le taux est souvent arrondi au-dessus de la formule pour des raisons politiques. Je garde 1,75\u202f%." }
+    ],
+    "six-nations": [
+      { by: "Mox", side: "haut", votes: 33, text: "Trois réceptions à domicile cette année pour le favori : c'est le facteur qui pèse le plus dans ce tournoi." },
+      { by: "Alea", side: "bas", votes: 21, text: "Le tenant du titre garde l'effectif le plus stable. L'indice sous-estime la continuité." }
+    ]
+  },
+
+  /* Test de calibration : dix affirmations vraies ou fausses, à noter de 0 à 100.
+     Ici les réponses sont réelles (faits vérifiables), contrairement au reste des données. */
+  calibrationQuiz: [
+    { text: "La tour Eiffel mesure plus de 300 mètres.", truth: true, note: "Elle culmine à environ 330 mètres, antennes comprises." },
+    { text: "Le mont Blanc dépasse 5\u202f000 mètres.", truth: false, note: "Il culmine à un peu plus de 4\u202f800 mètres." },
+    { text: "La France métropolitaine compte plus de 100 départements.", truth: false, note: "Elle en compte 96." },
+    { text: "La Seine est plus longue que la Loire.", truth: false, note: "La Loire fait environ 1\u202f000 km, la Seine environ 775 km." },
+    { text: "Un marathon fait plus de 40 kilomètres.", truth: true, note: "La distance officielle est de 42,195 km." },
+    { text: "La Lune est à plus d'un million de kilomètres de la Terre.", truth: false, note: "Elle est à environ 384\u202f000 km." },
+    { text: "L'eau bout à 100\u00a0°C au sommet de l'Everest.", truth: false, note: "La pression y est si basse qu'elle bout autour de 70\u00a0°C." },
+    { text: "Le corps humain adulte compte plus de 200 os.", truth: true, note: "Il en compte 206." },
+    { text: "L'ONU compte plus de 190 États membres.", truth: true, note: "Elle en compte 193." },
+    { text: "La Révolution française a commencé avant l'indépendance des États-Unis.", truth: false, note: "La Déclaration d'indépendance date de 1776, la Révolution de 1789." }
+  ],
+
   // NostraData Intelligence : exemples de rapports (fictifs).
   reports: [
     { theme: "politique", themeLabel: "Politique", title: "Présidentielle 2027", rhythm: "Chaque mois, puis chaque semaine en avril", summary: "Participation, qualifiés, écarts entre marchés et opinion, et ce que disent les meilleurs prévisionnistes." },

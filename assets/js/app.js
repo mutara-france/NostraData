@@ -128,13 +128,50 @@
     }
     showStreak();
   }
+  /* ---------- Flammes : jours consécutifs de visite ----------
+     Une visite par jour suffit à entretenir la série. Un jour manqué la remet à 1.
+     Démo : la série est comptée dans le navigateur (elle sera liée au compte avec le serveur). */
+  var MILESTONES = [3, 7, 14, 30, 100];
+  function dayKey(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function daysAgo(n) { var d = new Date(); d.setDate(d.getDate() - n); return d; }
+  function touchStreak() {
+    var data = readStore(), st = data.streak || { count: 0, best: 0, last: "", days: [] }, today = dayKey(new Date()), grew = false;
+    if (st.last !== today) {
+      st.count = st.last === dayKey(daysAgo(1)) ? st.count + 1 : 1;
+      st.last = today;
+      st.best = Math.max(st.best || 0, st.count);
+      st.days = (st.days || []).concat([today]).slice(-60);
+      data.streak = st;
+      writeStore(data);
+      grew = true;
+    }
+    return { streak: st, grew: grew };
+  }
+  function flameLevel(n) { return n >= 7 ? "feu" : n >= 3 ? "chaud" : "doux"; }
+  function flame() {
+    return '<svg class="flame" viewBox="0 0 24 24" aria-hidden="true"><path class="flame-out" d="M12 2 C12.5 5.5 16.5 7.5 17.8 11.5 C19.2 16 16.6 21.5 12 21.5 C7.4 21.5 4.8 17 6.2 12.8 C6.8 11 8 9.8 8.6 8.2 C9.6 9.4 10 10.4 10.2 11.4 C11.6 9.2 12.4 5.6 12 2 Z"/>' +
+      '<path class="flame-in" d="M12 12.5 C13.6 14.4 14.6 15.8 14.6 17.4 C14.6 19.2 13.5 20.3 12 20.3 C10.5 20.3 9.4 19.2 9.4 17.6 C9.4 15.8 10.8 14.6 12 12.5 Z"/></svg>';
+  }
   function showStreak() {
     var el = $("streak");
     if (!el) { return; }
-    var n = Object.keys(readStore().answers || {}).length;
-    if (n < 1) { return; }
-    el.innerHTML = '<span class="face">' + face(Math.min(1, n / 7), "sur") + "</span><span>" + n + " réponse" + (n > 1 ? "s" : "") + "</span>";
+    var r = touchStreak(), n = r.streak.count;
+    el.className = "streak streak--" + flameLevel(n) + (r.grew && n > 1 ? " streak--pop" : "");
+    el.innerHTML = flame() + '<span class="streak-n">' + n + '</span><span class="streak-label">jour' + (n > 1 ? "s" : "") + "</span>";
+    el.setAttribute("aria-label", "Série : " + n + " jour" + (n > 1 ? "s" : "") + " de suite");
+    el.title = n + " jour" + (n > 1 ? "s" : "") + " de suite";
     el.hidden = false;
+  }
+  function streakPanel() {
+    var st = touchStreak().streak, n = st.count, next = MILESTONES.filter(function (m) { return m > n; })[0], week = "", i, d, on;
+    for (i = 6; i >= 0; i--) {
+      d = daysAgo(i); on = (st.days || []).indexOf(dayKey(d)) >= 0;
+      week += '<div class="week-day' + (on ? " is-on" : "") + '">' + flame() + "<span>" + (i === 0 ? "auj." : d.toLocaleDateString("fr-FR", { weekday: "short" })) + "</span></div>";
+    }
+    return '<div class="streak-panel streak--' + flameLevel(n) + '"><div class="streak-big">' + flame() + '<div><p class="num">' + n + '</p><p class="strong">jour' + (n > 1 ? "s" : "") + " de suite</p></div></div>" +
+      '<div class="week" role="img" aria-label="Tes visites des sept derniers jours">' + week + "</div>" +
+      '<p class="streak-next">Record : ' + (st.best || n) + " jour" + ((st.best || n) > 1 ? "s" : "") + ". " +
+      (next ? "Encore " + (next - n) + " jour" + (next - n > 1 ? "s" : "") + " pour la flamme des " + next + " jours." : "Tu as toutes les flammes.") + " Reviens demain pour garder ta série.</p></div>";
   }
 
   // ---------- Jouer une question (les quatre types) ----------
@@ -587,6 +624,7 @@
       var cal = readStore().calibration, follows = Object.keys(readStore().follows || {}).filter(findQuestion);
       document.title = u.pseudo + " — Profil NostraData";
       root.innerHTML = '<section class="section"><div class="wrap stack">' + profileHead(u.pseudo, "Curieux", "", face(Math.min(1, ids.length / ND.minResolved), "partage"), true) +
+        streakPanel() +
         '<div class="tiles">' + tile("Indice de fiabilité", "–", "Après " + ND.minResolved + " questions tranchées") + tile("Réponses en attente", String(ids.length), "Le verdict n'est pas encore tombé") +
         tile("Tournois rejoints", String(joined.length), "Voir les tournois ouverts") +
         tile("Test de calibration", cal ? String(cal.score) : "–", cal ? cal.profile : "Dix affirmations, trois minutes") + "</div>" +

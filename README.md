@@ -44,6 +44,7 @@ Ce dépôt contient la première version du site : une **démo statique**, sans 
 - les tournois d'entreprise : nom visible ou anonyme, accès ouvert ou réservé à certains titres, dotation et répartition affichées ;
 - le simulateur de dotation de la page Business : meilleur prévisionniste, 3 meilleurs, ou tous les répondants ;
 - le classement général et par catégorie, avec un lien vers le profil public de chaque joueur ;
+- les flammes : le nombre de jours de suite où le joueur est venu, affiché dans l'en-tête et détaillé sur son profil (paliers à 3, 7, 14, 30 et 100 jours) ;
 - la connexion **en mode démo** : rien n'est envoyé, l'e-mail et le mot de passe ne sont ni vérifiés ni enregistrés, seul le pseudonyme est gardé dans le navigateur.
 
 Tout l'état du joueur (pronostics, pseudonyme, tournois rejoints) est dans le `localStorage` du navigateur. Rien n'est envoyé à un serveur.
